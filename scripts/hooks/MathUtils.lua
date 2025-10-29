@@ -111,4 +111,13 @@ function MathUtils.approachCurveDTMULT(val, target, amount)
     return MathUtils.approach(val, target, math.max(0.1, math.abs(target - val) / amount) * DTMULT)
 end
 
+function MathUtils.rotateTowards(a, b, t)
+    local diff = MathUtils.angleDiff(b, a)
+    if (math.abs(diff) > t) then
+        return a + (MathUtils.sign(diff) * t)
+    else
+        return b
+    end
+end
+
 return MathUtils

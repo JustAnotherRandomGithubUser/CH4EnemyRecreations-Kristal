@@ -11,12 +11,8 @@ function Mizzle:init()
     self.attack = 13
     self.defense = 0
     self.money = 110
-    self.experience = 10
+    self.experience = 0
     self.spare_points = 10
-
-    self.waves = {
-        --"mizzle/idk",
-    }
 
     self.dialogue = {
         "Who's there?\nWho's there?",
@@ -189,6 +185,16 @@ function Mizzle:onAct(battler, name)
     end
 
     return super.onAct(self, battler, name)
+end
+
+function Mizzle:getNextWaves()
+    if self.tired == false then
+        return {"mizzle/spirals"}
+    else
+        --return {"mizzle/spotlights"}
+    end
+
+    return super.getNextWaves(self)
 end
 
 function Mizzle:getEnemyDialogue()
