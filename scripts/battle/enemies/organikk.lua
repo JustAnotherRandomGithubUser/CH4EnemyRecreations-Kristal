@@ -53,8 +53,6 @@ function Organikk:init()
 
     self.killable = true
 
-    self.siner = MathUtils.random(100)
-
     self.harmon_sound = nil
     self.harmonize = false
     self.chorus = false
@@ -69,6 +67,17 @@ function Organikk:init()
 
     self.showtempmercy = false
     self.mercyget = 0
+
+    self.sprite.active = false
+
+    local i = 1
+    for _, enemy in ipairs(Game.battle:getActiveEnemies()) do
+        if enemy.id == self.id then
+            self.sprite.siner = (i + 1) * 100
+            self.sprite.siner_2 = i * 33
+            i = i + 1
+        end
+    end
 end
 
 function Organikk:onAct(battler, name)
@@ -211,8 +220,8 @@ function Organikk:update()
 	end
 
     if Game.battle.state ~= "TRANSITION" and Game.battle.state ~= "INTRO" then
-        self.siner = self.siner + (1 / 6) * DTMULT
-        self.sprite.x = (math.sin(self.siner / 1.5)) * 3
+        self.sprite.active = true
+        self.sprite.x = (math.sin(self.sprite.siner_2 / 1.5)) * 3
     end
 
     local king = TableUtils.filter(Game.battle:getActiveEnemies(), function(e) return e.id == "organikking" end)

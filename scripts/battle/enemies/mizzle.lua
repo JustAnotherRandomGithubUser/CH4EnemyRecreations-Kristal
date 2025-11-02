@@ -359,7 +359,7 @@ function Mizzle:update()
 
     if Game.battle.state ~= "TRANSITION" and Game.battle.state ~= "INTRO" then
         self.siner = self.siner + (1 / 6) * DTMULT
-        self.y = self.init_y + (math.sin(self.siner * 0.5)) * 5
+        self.sprite.y = (math.sin(self.siner * 0.5)) * 5
         if self.bubble then
             if self.tired then
                 self.bubble.y = self.y-56
