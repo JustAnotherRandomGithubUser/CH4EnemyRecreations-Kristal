@@ -251,7 +251,7 @@ function PillarHarmony:update()
             Game.battle.timer:during(1/2, function()
                 timer = timer + DT
                 if self.charge_sfx then
-                    self.charge_sfx:setVolume(Utils.clampMap(timer, 0, 1/2, 0, 1))
+                    self.charge_sfx:setVolume(MathUtils.rangeMap(timer, 0, 1/2, 0, 1))
                 end
             end)
             self.charge_sfx:play()
@@ -260,18 +260,30 @@ function PillarHarmony:update()
         for _, attacker in ipairs(self.wave:getAttackers()) do
             if not self.highlight then
                 self.highlight = Game.battle:addChild(OrganikkHighlight(attacker.x - 54, attacker.y - 11))
-            else
-                Game.battle.timer:after(2/30, function() self.highlight:remove() end)
+                self.highlight:setLayer(BATTLE_LAYERS["above_battlers"])
+            -- else
+            --     Game.battle.timer:after(2/30, function() self.highlight:remove() end)
             end
         end
 
         self.particle_timer = self.particle_timer + DTMULT
-        if self.particle_timer >= 1 then
+        if self.particle_timer >= 3 then
             for _, attacker in ipairs(self.wave:getAttackers()) do
-                Game.battle:addChild(OrganikkParticle(attacker.x - 15 + MathUtils.random(-20, 20),attacker.y - 20))
-                Game.battle:addChild(OrganikkParticle(Game.battle.soul.x  - 12 + MathUtils.random(-5, 5),Game.battle.soul.y - 4))
+                local particle_1 = Game.battle:addChild(OrganikkParticle(attacker.x - 15 + MathUtils.random(-20, 20),attacker.y - 20))
+                particle_1:setLayer(BATTLE_LAYERS["above_battlers"])
+                local particle_2 = Game.battle:addChild(OrganikkParticle(Game.battle.soul.x  - 12 + MathUtils.random(-5, 5),Game.battle.soul.y - 4))
+                particle_2:setLayer(BATTLE_LAYERS["above_soul"])
+                -- obj_heart.x + random(20), obj_heart.y + random(20)
+                -- local soul = Game.battle.soul
+                -- local x, y = soul:getPosition()
+                -- local origin_x, origin_y = soul:getOrigin()
+                -- local width, height = soul:getScaledSize()
+                -- local heart_x, heart_y = x - width * origin_x, y - height * origin_y
+                -- local heart_x, heart_y = soul:getPosition()
+                -- local particle = Game.battle:addChild(OrganikkParticle(heart_x + MathUtils.random(20), heart_y + MathUtils.random(20)))
+                -- particle:setLayer(BATTLE_LAYERS["above_soul"])
             end
-            self.particle_timer = self.particle_timer - 1
+            self.particle_timer = self.particle_timer - 3
         end
 
         self.gainmercytimer = self.gainmercytimer + DTMULT
@@ -300,7 +312,7 @@ function PillarHarmony:update()
             self.highlight = nil
         end
     else
-        
+        -- Nothing
     end
 end
 

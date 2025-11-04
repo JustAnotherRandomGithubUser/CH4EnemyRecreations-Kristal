@@ -6,8 +6,8 @@ function LongNotes:init()
     self.time = 220/30
 
     self.interval = 35
-    -- self.start_time = 40
-    self.start_time = 20 -- It's 40 but the code below is inaccurate
+    self.start_time = 40
+    -- self.start_time = 20 -- It's 40 but the code below is inaccurate
     self.segment = MathUtils.randomInt(5)
     self.first_segment = self.segment
     self.second_segment = self.segment
@@ -21,7 +21,6 @@ function LongNotes:init()
 end
 
 function LongNotes:onStart()
-    -- The code isnt like this but Idk what the alarm[0] = start_time/interval/whatever stuff is
     for _, attacker in ipairs(self:getAttackers()) do
         if(attacker.harmonizing == true) then
             self.difficulty = 1
@@ -61,7 +60,6 @@ function LongNotes:onEnd()
         self.b.highlight:remove()
     end
     Assets.stopSound("harmonize_act_b")
-    
 end
 
 -- function LongNotes:update()
@@ -103,7 +101,7 @@ function LongNotes:alarm()
         self.b = self:spawnBullet("organikk/pillar", x, y)
         if a == 0  and self.only_bars == true then
             self.timer:after(13/30, function ()
-                local randoff = Utils.pick{12.5, 137.5};
+                local randoff = TableUtils.pick{12.5, 137.5}
                 for i = 1, 6 do
                     self.bullet = self:spawnBullet("organikk/note", x, (y - 75) + (((25 * i) + randoff) % 150), 1, math.rad((i % 2) * 180), true)
                     self.bullet.go2 = true

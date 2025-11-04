@@ -65,13 +65,13 @@ function Pillar:onWaveSpawn()
     -- I can't find the part that spawns the afterimages
     self.wave.timer:everyInstant(3/30, function ()
         if self:isRemoved() or self.collider.collidable then return false end
-        local afterimage = self.wave:spawnObject(OrganikkPillarAfterImage("bullets/organikk/bar_1", 0.4 + MathUtils.random(0.25), 0.05))
+        local afterimage = self.wave:spawnObject(OrganikkPillarAfterImage("battle/bullets/organikk/bar_1", 0.4 + MathUtils.random(0.25), 0.05))
         afterimage:setLayer(self.layer - 1)
         afterimage:setPosition(self:getPosition())
         afterimage:setOrigin(self:getOrigin())
         afterimage:setScale(self:getScale())
         afterimage.rotation = self.rotation
-        afterimage.color = self.color
+        afterimage.start_color = self.color
     end)
 
     self.wave.timer:lerpVar(self, "scale_x", 0, 0.4, 13, 3, "in")

@@ -15,8 +15,8 @@ function Organikk:init()
     self.spare_points = 10
 
     self.waves = {
-        "organikk/longnotes",
-        "organikk/organnote_manager"
+        "organikk/pillars",
+        "organikk/bar"
     }
 
     self.dialogue = {
@@ -62,7 +62,8 @@ function Organikk:init()
 
     self.organsound = false
     self.organsoundtimer = 0
-	
+    self.organsoundplayed = {false, false, false}
+
     self.lullabied = 0
 
     self.showtempmercy = false
@@ -108,8 +109,10 @@ function Organikk:onAct(battler, name)
     elseif name == "Harmonize" then
         self.harmonize = true
         self.showtempmercy = true
-        for _,enemys in ipairs(Game.battle:getActiveEnemies()) do
-             enemys:addTemporaryMercy(1, true, {0, 100}, (function() return self.showtempmercy == false end))
+        for _, enemy in ipairs(Game.battle:getActiveEnemies()) do
+            if enemy.mercy < 100 then
+                enemy:addTemporaryMercy(1, true, {0, 100 - enemy.mercy}, (function() return self.showtempmercy == false end))
+            end
         end
         return "* You tried to harmonize!\n* Touch the GREEN!"
     elseif name == "Standard" then
@@ -138,6 +141,7 @@ function Organikk:onAct(battler, name)
             end)
             return
 
+        -- DPR moment
         elseif battler.chara.id == "dess" then
             local notes = {"so", "do", "la", "fa", "mi", "do_a", "re", "ti"}
             for _, note in pairs(notes) do
@@ -212,7 +216,7 @@ end
 
 function Organikk:update()
     super.update(self)
-    
+
     if self.mercy >= 100 then
 		self:setAnimation("spared")
 	else
@@ -238,7 +242,7 @@ function Organikk:update()
     end
 
     if self.harmonize and self.mercyget2 == 1 then
-        for _, attacker in ipairs(other) do        
+        for _, attacker in ipairs(other) do
             attacker:addTemporaryMercy(1, false, {0, 100}, (function() return self.showtempmercy == false end))
         end
         self.mercyget2 = 0
@@ -247,50 +251,49 @@ function Organikk:update()
     if self.organsound then
         self.organsoundtimer = self.organsoundtimer + 1 * DTMULT
 
-        if self.organsoundtimer == 1 or self.organsoundtimer == 8 or self.organsoundtimer == 15 then
-            local rand = MathUtils.randomInt(7)
-            if rand == 0 then
-                Assets.stopAndPlaySound("organ/mi")
-            elseif rand == 1 then
-                Assets.stopAndPlaySound("organ/re")
-            elseif rand == 2 then
-                Assets.stopAndPlaySound("organ/so")
-            elseif rand == 3 then
-                Assets.stopAndPlaySound("organ/ti")
-            elseif rand == 4 then
-                Assets.stopAndPlaySound("organ/do")
-            elseif rand == 5 then
-                Assets.stopAndPlaySound("organ/do_a")
-            elseif rand == 6 then
-                Assets.stopAndPlaySound("organ/fa")
-            elseif rand == 7 then
-                Assets.stopAndPlaySound("organ/la")
+        if
+            (self.organsoundtimer >= 1 and not self.organsoundplayed[1]) or
+            (self.organsoundtimer >= 8 and not self.organsoundplayed[2]) or
+            (self.organsoundtimer >= 15 and not self.organsoundplayed[3])
+        then
+            local notes = {"mi", "re", "so", "ti", "do", "do_a", "fa", "la"}
+            for _, note in ipairs(notes) do
+                Assets.stopSound("organ/" .. note)
             end
+            local rand = MathUtils.randomInt(7)
+            Assets.playSound("organ/" .. notes[rand])
+            if self.organsoundtimer >= 1  then self.organsoundplayed[1] = true end
+            if self.organsoundtimer >= 8  then self.organsoundplayed[2] = true end
+            if self.organsoundtimer >= 15 then self.organsoundplayed[3] = true end
         end
 
-        if self.organsoundtimer == 16 then
+        if self.organsoundtimer >= 16 then
             self.organsoundtimer = 0
+            self.organsoundplayed = {false, false, false}
             self.organsound = false
         end
     end
 end
 
 function Organikk:getNextWaves()
-    local organikks = Utils.filter(Game.battle:getActiveEnemies(), function(e) return e.id == "organikk" end)
-    local enemys = Utils.filter(Game.battle:getActiveEnemies(), function(e) return e.id ~= "organikk" end)
-
-    for _,enemy in ipairs(organikks) do
-        if #organikks >= 2 and self.harmonize then
-            return {"organikk/longnotes_organnote"}
-        elseif #organikks >= 2 and enemy.harmonize then
-            return {"organikk/longnotes_organnote2"}
-        elseif #organikks == 1 and self.harmonize then
-            return {"organikk/longnotes_organnote"}
-        elseif #organikks == 1 and not self.harmonize then
-            return {"organikk/longnotes","organikk/organnote_manager"}
-	    end
+    local any_enemy_harmonize, any_enemy_selected_pillar = false, false
+    for _, enemy in ipairs(Game.battle:getActiveEnemies()) do
+        if enemy.id == "organikk" and enemy ~= self then
+            if not any_enemy_harmonize and enemy.harmonize then any_enemy_harmonize = true end
+            if not any_enemy_selected_pillar and enemy.selected_wave == "organikk/pillars" then any_enemy_selected_pillar = true end
+            if any_enemy_harmonize and any_enemy_selected_pillar then break end
+        end
     end
-    return super.getNextWaves(self)
+
+    if self.harmonize then
+        return {"organikk/bar_harmonize"}
+    elseif any_enemy_harmonize then
+        return {"organikk/nothing"}
+    elseif any_enemy_selected_pillar then
+        return {"organikk/bar"}
+    else
+        return self.waves
+    end
 end
 
 function EnemyBattler:onDefeatRun(damage, battler)

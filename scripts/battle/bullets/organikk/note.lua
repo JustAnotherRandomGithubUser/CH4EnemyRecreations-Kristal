@@ -27,13 +27,13 @@ function Note:update()
     super.update(self)
     if self.go then
         self.siner = self.siner + (1 / 6) * DTMULT
-        self.x = self.x + (math.sin(self.siner / 2)) * 3
+        self.x = self.x + (math.sin(self.siner / 2)) * 3 * DTMULT
 
         self.timer = self.timer + (1 * DTMULT)
-        if self.timer == 2 then
+        if self.timer >= 2 then
             local aimg = AfterImage(self.sprite, 0.7, 0.07)
             Game.battle:addChild(aimg)
-            self.timer = 0
+            self.timer = self.timer - 2
         end
     end
 
@@ -47,20 +47,20 @@ function Note:update()
             self.scale_x = 1
             self.scale_y = 1
             if self.physics.speed <= 4 then
-                self.physics.speed = self.physics.speed + 0.5 * DTMULT
+                self.physics.speed = math.min(self.physics.speed + 0.5 * DTMULT, 4)
             else
                 self.physics.speed = 4
             end
         end
 
         self.siner2 = self.siner2 + (1 / 6) * DTMULT
-        self.y = self.y + (math.sin(self.siner2 / 1)) * 2
+        self.y = self.y + (math.sin(self.siner2 / 1)) * 2 * DTMULT
 
         self.timer = self.timer + (1 * DTMULT)
-        if self.timer == 2 then
+        if self.timer >= 2 then
             local aimg = AfterImage(self.sprite, 0.7, 0.07)
             Game.battle:addChild(aimg)
-            self.timer = 0
+            self.timer = self.timer - 2
         end
     end
 end

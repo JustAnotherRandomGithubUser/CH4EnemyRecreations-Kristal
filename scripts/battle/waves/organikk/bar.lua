@@ -27,7 +27,7 @@ function OrganNoteManager:init()
     self.v_pos2 = 0
     self.cur_note2 = 0
     self.gap_value2 = 0
-    
+
     self.special = 0
     self.i = 1
     self.image_index = 0
@@ -49,18 +49,18 @@ function OrganNoteManager:onStart()
     if self.same_attack >= 2 then
         self.same_attack = 2
     end
-    
+
     for _, attacker in ipairs(self:getAttackers()) do
         self.atx = attacker.x
         self.aty = attacker.y
     end
 
     self.gap_list = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-    OrganNoteManager:shuffle(self.gap_list)
+    self.gap_list = TableUtils.shuffle(self.gap_list)
 
     if self.same_attack == 2 then
         self.gap_list2 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-        OrganNoteManager:shuffle(self.gap_list2)
+        self.gap_list2 = TableUtils.shuffle(self.gap_list2)
     end
 
     self.interval = 20
@@ -80,7 +80,7 @@ function OrganNoteManager:onStart()
     end
 
     if self.same_attack == 1 then
-        self.origin_list = {1, 1, 1, 2, 2, 2, 3, 3, 3, Utils.pick{1,2,3}}
+        self.origin_list = {1, 1, 1, 2, 2, 2, 3, 3, 3, TableUtils.pick{1,2,3}}
     elseif self.same_attack == 2 then
         self.origin_list = {1, 1, 2, 2, 3, 3}
         self.origin_list2 = {1, 1, 2, 2, 3, 3}
@@ -93,32 +93,32 @@ function OrganNoteManager:onStart()
         end
     end
     table.sort(self.gap_list)
-    OrganNoteManager:shuffle(self.origin_list)
+    self.origin_list = TableUtils.shuffle(self.origin_list)
 
     if(self.same_attack == 2) then
         table.sort(self.gap_list2)
-        OrganNoteManager:shuffle(self.origin_list2)
+        self.origin_list2 = TableUtils.shuffle(self.origin_list2)
     end
 end
 
 function OrganNoteManager:update()
     super.update(self)
     if self.alarm_0 > 0 and self.alarm_0_start then
-        self.alarm_0 = self.alarm_0 - 1
+        self.alarm_0 = self.alarm_0 - 1 * DTMULT
         if self.alarm_0 <= 0 then
             self.alarm_0_start = false
             self:alarm0()
         end
     end
     if self.alarm_1 > 0 and self.alarm_1_start then
-        self.alarm_1 = self.alarm_1 - 1
+        self.alarm_1 = self.alarm_1 - 1 * DTMULT
         if self.alarm_1 <= 0 then
             self.alarm_1_start = false
             self:alarm1()
         end
     end
     if self.alarm_2 > 0 and self.alarm_2_start then
-        self.alarm_2 = self.alarm_2 - 1
+        self.alarm_2 = self.alarm_2 - 1 * DTMULT
         if self.alarm_2 <= 0 then
             self.alarm_2_start = false
             self.timeron = false
@@ -141,8 +141,8 @@ function OrganNoteManager:alarm1()
     self.v_pos2 = arena.bottom + 40
 
     if self.bullet_counter < #self.origin_list then
-        self.special = Utils.pick{-3, -2, -1, 0, 1, 2}
-        
+        self.special = TableUtils.pick{-3, -2, -1, 0, 1, 2}
+
         self.image_index = self.origin_list[self.bullet_counter + 1]
         self.bullet = self:spawnBullet("organikk/note", self.atx - 50, self.aty - 80, self.image_index, self.special)
 
@@ -207,9 +207,9 @@ function OrganNoteManager:alarm1()
             self.alarm_1_start = true
         end
     else 
-        OrganNoteManager:shuffle(self.bullet_list)
+        self.bullet_list = TableUtils.shuffle(self.bullet_list)
         if(self.same_attack == 2) then
-            OrganNoteManager:shuffle(self.bullet_list2)
+            self.bullet_list2 = TableUtils.shuffle(self.bullet_list2)
         end
         if self.repeating then
             self.alarm_2 = 1
@@ -227,26 +227,26 @@ function OrganNoteManager:alarm2()
             local cur_note = self.bullet_list[1]
             local cur_note2 = self.bullet_list2[1]
 
-            cur_note.shway_counter = Utils.pick{0, 10 * math.pi}
+            cur_note.shway_counter = TableUtils.pick{0, 10 * math.pi}
             cur_note.physics.direction = Utils.angle(cur_note.x, cur_note.y, Game.battle.soul.x, Game.battle.soul.y)
             self.timer:lerpVar(cur_note.physics, "speed", -5, 0, 10, 0, "in")
 
             if(self.same_attack == 2) then
-                cur_note2.shway_counter = Utils.pick{0, 10 * math.pi}
+                cur_note2.shway_counter = TableUtils.pick{0, 10 * math.pi}
                 cur_note2.physics.direction = Utils.angle(cur_note2.x, cur_note2.y, Game.battle.soul.x, Game.battle.soul.y)
                 self.timer:lerpVar(cur_note2.physics, "speed", -5, 0, 10, 0, "in")
             end
 
             self.timer:after(0.4, function ()
-                    cur_note.physics.direction = math.rad(90 + Utils.random(-5,5))
+                    cur_note.physics.direction = math.rad(90 + MathUtils.random(-5,5))
                     if(self.same_attack == 2) then
-                        cur_note2.physics.direction = math.rad(270 + Utils.random(-5,5))
+                        cur_note2.physics.direction = math.rad(270 + MathUtils.random(-5,5))
                     end
             end)
             self.timer:after(0.8, function ()
-                self:spawnBullet("organikk/afterImage_note", cur_note.x, cur_note.y, cur_note.image_index)
+                self:spawnBullet("organikk/afterimage_note", cur_note.x, cur_note.y, cur_note.image_index)
                 if(self.same_attack == 2) then
-                    self:spawnBullet("organikk/afterImage_note", cur_note2.x, cur_note2.y, cur_note2.image_index)
+                    self:spawnBullet("organikk/afterimage_note", cur_note2.x, cur_note2.y, cur_note2.image_index)
                 end
 
                 if(cur_note.image_index == 1) then
@@ -295,23 +295,23 @@ function OrganNoteManager:alarm2()
             self.origin_list2 = {}
         end
         if self.same_attack == 1 then
-            self.origin_list = {1, 1, 1, 2, 2, 2, 3, 3, 3, Utils.pick{1,2,3}}
+            self.origin_list = {1, 1, 1, 2, 2, 2, 3, 3, 3, TableUtils.pick{1,2,3}}
         elseif self.same_attack == 2 then
             self.origin_list = {1, 1, 2, 2, 3, 3}
             self.origin_list2 = {1, 1, 2, 2, 3, 3}
         end
 
-        OrganNoteManager:shuffle(self.origin_list)
+        self.origin_list = TableUtils.shuffle(self.origin_list)
         if(self.same_attack == 2) then
-            OrganNoteManager:shuffle(self.origin_list2)
+            self.origin_list2 = TableUtils.shuffle(self.origin_list2)
         end
 
         self.gap_list = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-        OrganNoteManager:shuffle(self.gap_list)
+        self.gap_list = TableUtils.shuffle(self.gap_list)
 
         if(self.same_attack == 2) then
             self.gap_list2 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-            OrganNoteManager:shuffle(self.gap_list2)
+            self.gap_list2 = TableUtils.shuffle(self.gap_list2)
         end
 
         if self.same_attack == 2 then
@@ -334,12 +334,12 @@ local function draw_line_width_color(x1, y1, x2, y2, width, color1, color2)
     love.graphics.line(x1, y1, x2, y2)
 end
 
-function OrganNoteManager:shuffle(tbl)
-    for i = #tbl, 2, -1 do
-        local j = math.random(1, i)
-        tbl[i], tbl[j] = tbl[j], tbl[i]
-    end
-end
+-- function OrganNoteManager:shuffle(tbl)
+--     for i = #tbl, 2, -1 do
+--         local j = math.random(1, i)
+--         tbl[i], tbl[j] = tbl[j], tbl[i]
+--     end
+-- end
 
 function OrganNoteManager:draw()
 

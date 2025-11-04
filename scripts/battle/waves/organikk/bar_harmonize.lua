@@ -76,7 +76,7 @@ function LongNotesOrganNote:onStart()
     end
 
     if self.sameattack == 1 then
-        self.origin_list = {1, 1, 1, 2, 2, 2, 3, 3, 3, Utils.pick{1,2,3}}
+        self.origin_list = {1, 1, 1, 2, 2, 2, 3, 3, 3, TableUtils.pick{1,2,3}}
     elseif self.sameattack == 2 then
         self.origin_list = {0, 0, 1, 1, 2, 2}
         self.interval_org = 25
@@ -85,7 +85,7 @@ function LongNotesOrganNote:onStart()
         end
     end
     table.sort(self.gap_list)
-    LongNotesOrganNote:shuffle(self.origin_list)
+    self.origin_list = TableUtils.shuffle(self.origin_list)
 end
 
 ----------------------longnote code----------------------
@@ -110,7 +110,7 @@ function LongNotesOrganNote:alarm()
     self.segment = TableUtils.pick(list)
     self.segment = self.segment % 6
     self.first_segment = self.segment
-    local x, y = 0, 0   
+    local x, y = 0, 0
     x = Game.battle.arena.x
     y = Game.battle.arena.top + 12.5 + (25 * self.segment)
 
@@ -161,8 +161,8 @@ function LongNotesOrganNote:alarm1()
     end
 
     if self.bullet_counter < #self.origin_list then
-        self.special = Utils.pick{-3, -2, -1, 0, 1, 2}
-        
+        self.special = TableUtils.pick{-3, -2, -1, 0, 1, 2}
+
         self.image_index = self.origin_list[self.bullet_counter + 1]
         self.bullet = self:spawnBullet("organikk/note", self.atx - 50, self.aty - 80, self.image_index, self.special)
 
@@ -197,7 +197,7 @@ function LongNotesOrganNote:alarm1()
             self.alarm_1_start = true
         end
     else 
-        LongNotesOrganNote:shuffle(self.bullet_list)
+        self.bullet_list = TableUtils.shuffle(self.bullet_list)
         if self.repeating then
             self.alarm_2 = 1
             self.alarm_2_start = true
@@ -215,19 +215,19 @@ function LongNotesOrganNote:alarm2()
         if #self.bullet_list > 0 then
             local cur_note = self.bullet_list[1]
 
-            cur_note.shway_counter = Utils.pick{0, 10 * math.pi}
+            cur_note.shway_counter = TableUtils.pick{0, 10 * math.pi}
             cur_note.physics.direction = Utils.angle(cur_note.x, cur_note.y, Game.battle.soul.x, Game.battle.soul.y)
             self.timer:lerpVar(cur_note.physics, "speed", -5, 0, 10, 0, "in")
 
             self.timer:after(0.4, function ()
                 if (self.sameattacker == 0) then
-                    cur_note.physics.direction = math.rad(90 + Utils.random(-5,5))
+                    cur_note.physics.direction = math.rad(90 + MathUtils.random(-5,5))
                 else
                     self.v_pos = arena.bottom + 40
                 end
             end)
             self.timer:after(0.8, function ()
-                self:spawnBullet("organikk/afterImage_note", cur_note.x, cur_note.y, cur_note.image_index)
+                self:spawnBullet("organikk/afterimage_note", cur_note.x, cur_note.y, cur_note.image_index)
 
                 if(cur_note.image_index == 1) then
                     cur_note.go = true
@@ -256,12 +256,12 @@ function LongNotesOrganNote:alarm2()
 
         self.origin_list = {}
         if self.sameattack == 1 then
-            self.origin_list = {1, 1, 1, 2, 2, 2, 3, 3, 3, Utils.pick{1,2,3}}
+            self.origin_list = {1, 1, 1, 2, 2, 2, 3, 3, 3, TableUtils.pick{1,2,3}}
         elseif self.sameattack == 2 then
             self.origin_list = {0, 0, 1, 1, 2, 2}
         end
 
-        LongNotesOrganNote:shuffle(self.origin_list)
+        self.origin_list = TableUtils.shuffle(self.origin_list)
 
         self.gap_list = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
         TableUtils.shuffle(self.gap_list)
@@ -281,12 +281,12 @@ local function draw_line_width_color(x1, y1, x2, y2, width, color1, color2)
     love.graphics.line(x1, y1, x2, y2)
 end
 
-function LongNotesOrganNote:shuffle(tbl)
-    for i = #tbl, 2, -1 do
-        local j = math.random(1, i)
-        tbl[i], tbl[j] = tbl[j], tbl[i]
-    end
-end
+-- function LongNotesOrganNote:shuffle(tbl)
+--     for i = #tbl, 2, -1 do
+--         local j = math.random(1, i)
+--         tbl[i], tbl[j] = tbl[j], tbl[i]
+--     end
+-- end
 
 function LongNotesOrganNote:draw()
     super.draw(self)
