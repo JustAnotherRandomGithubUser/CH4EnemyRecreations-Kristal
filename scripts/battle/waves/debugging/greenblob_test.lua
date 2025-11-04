@@ -12,7 +12,7 @@ function GreenBlobTest:onStart()
     self.timer:every(10/30, function()
         local soul = Game.battle.soul
         local tempdist = 100 + MathUtils.random(40)
-        local tempdir = 30 + MathUtils.random(360)
+        local tempdir = math.rad(30 + MathUtils.random(360))
 
         self:spawnBullet("titan/greenblob", soul.x + MathUtils.lengthDirX(tempdist, tempdir), soul.y + MathUtils.lengthDirY(tempdist, tempdir))
     end)

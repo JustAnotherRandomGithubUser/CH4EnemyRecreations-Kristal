@@ -47,8 +47,8 @@ function Spirals:onStart()
         if do_this then
             for a = 0, circ-1 do
                 local cside = 90 + (90 * side)
-                local spiral = self:spawnBullet("mizzle/spiral",arena.x + MathUtils.lengthDirX(128, (cside - 5) + (10 * a) + offset), arena.y + MathUtils.lengthDirY(128, (cside - 5) + (10 * a) + offset))
-                spiral = self:spawnBullet("mizzle/spiral", arena.x + MathUtils.lengthDirX(128, ((cside + 5) - (10 * a)) + offset), arena.y + MathUtils.lengthDirY(128, ((cside + 5) - (10 * a)) + offset))
+                local spiral = self:spawnBullet("mizzle/spiral",arena.x + MathUtils.lengthDirX(128, math.rad((cside - 5) + (10 * a) + offset)), arena.y + MathUtils.lengthDirY(128, math.rad((cside - 5) + (10 * a) + offset)))
+                spiral = self:spawnBullet("mizzle/spiral", arena.x + MathUtils.lengthDirX(128, math.rad(((cside + 5) - (10 * a)) + offset)), arena.y + MathUtils.lengthDirY(128, math.rad(((cside + 5) - (10 * a)) + offset)))
             end
         end
         

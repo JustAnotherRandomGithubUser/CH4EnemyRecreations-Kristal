@@ -47,8 +47,8 @@ function PendulumCH4:update()
             self.extend = self.extend + (self.extend_spd * DTMULT)
         end
     
-        self.x = self.centre_x + MathUtils.lengthDirX(self.extend, self.angle) * DTMULT
-        self.y = self.centre_y + MathUtils.lengthDirY(self.extend, self.angle) * DTMULT
+        self.x = self.centre_x + MathUtils.lengthDirX(self.extend, math.rad(self.angle)) * DTMULT
+        self.y = self.centre_y + MathUtils.lengthDirY(self.extend, math.rad(self.angle)) * DTMULT
     
         if ((self.timer % 4) == 0) then
             self.grazed = false

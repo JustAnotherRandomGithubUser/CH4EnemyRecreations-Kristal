@@ -8,7 +8,7 @@ function HolyFireSpawner:init(x, y, bullets, count)
 	self.speedtarg = 6
 	self.widthmod = 1
 	self.count = count or 1
-	self.turn = 1.5 * MathUtils.sign((self.count % 2) - 0.5)
+	self.turn = math.rad(1.5 * MathUtils.sign((self.count % 2) - 0.5))
     self:setHitbox(nil)
     self.sprite.visible = false
 
@@ -29,7 +29,7 @@ end
 function HolyFireSpawner:onAdd(parent)
     super.onAdd(self, parent)
 	for i = 1, self.bullets do
-		table.insert(self.subs, self.wave:spawnBullet("guei/holyfire", x, y, ((360 / self.bullets) * i-1), 0))
+		table.insert(self.subs, self.wave:spawnBullet("guei/holyfire", 0, 0, math.rad((360 / self.bullets) * i-1), 0))
     end
 end
 

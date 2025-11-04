@@ -57,6 +57,7 @@ function HolyFire:update()
 					bullets = 3
 				end
 
+				dir = math.rad(dir)
 				local a = self:spawnBullet("guei/holyfirespawner", Game.battle.arena.x + MathUtils.lengthDirX(dist, dir), Game.battle.arena.y + MathUtils.lengthDirY(dist * 0.75, dir), bullets, self.flames_made)
 				a.speedtarg = 6
 				a.widthmod = 1.25
