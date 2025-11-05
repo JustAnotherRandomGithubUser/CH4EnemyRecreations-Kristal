@@ -11,7 +11,7 @@ function Balthizard:init()
     self.attack = 14
     self.defense = 0
     self.money = 130
-    self.experience = 10
+    self.experience = 0
     self.spare_points = 10
 
     self.waves = {

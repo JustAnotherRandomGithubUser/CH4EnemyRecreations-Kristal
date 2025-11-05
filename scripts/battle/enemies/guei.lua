@@ -12,7 +12,7 @@ function Guei:init()
     self.attack = 13
     self.defense = 0
     self.money = 120
-    self.experience = 10
+    self.experience = 0
     self.spare_points = 10
 
     self.waves = {
