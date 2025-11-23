@@ -49,6 +49,10 @@ function RedShape:update()
 
     -- Spawns the afterimage trail when the bullet's speed reaches 2.
     if self.physics.speed > 2 then
+        local afterimage = AfterImage(self.sprite, 0.3, 0.08)
+        afterimage.layer = self.sprite.layer - 20
+        afterimage.debug_select = false
+        self:addChild(afterimage)
     end
 end
 
