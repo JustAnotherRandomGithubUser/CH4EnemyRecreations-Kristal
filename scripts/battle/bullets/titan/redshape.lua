@@ -27,15 +27,15 @@ function RedShape:chaseHeart()
     local hx, hy = Game.battle.soul.x, Game.battle.soul.y
 
     if (MathUtils.dist(self.x, self.y, hx, hy) < (Game.battle.soul.light_radius + 8)) or self.light > 0 then
-        self.physics.speed = MathUtils.approach(self.physics.speed, self.speed_max * self.speed_max_multiplier * 0.5, self.physics.speed * 0.25)
+        self.physics.speed = MathUtils.approach(self.physics.speed, self.speed_max * self.speed_max_multiplier * 0.5, (self.physics.speed * 0.25) * DTMULT)
     else
-        self.physics.speed = MathUtils.approach(self.physics.speed, self.speed_max * self.speed_max_multiplier, self.accel * self.speed_max_multiplier * (1 - self.light))
+        self.physics.speed = MathUtils.approach(self.physics.speed, self.speed_max * self.speed_max_multiplier, (self.accel * self.speed_max_multiplier * (1 - self.light)) * DTMULT)
     end
     
     local anglediff = MathUtils.angleDiff(self.physics.direction, Utils.angle(self.x, self.y, hx, hy))
         
     if self.tracking_val2 > 0 then
-        self.physics.direction = MathUtils.angleLerp(self.physics.direction, Utils.angle(self.x, self.y, hx, hy), self.tracking_val2 * 0.3)
+        self.physics.direction = MathUtils.angleLerp(self.physics.direction, Utils.angle(self.x, self.y, hx, hy), (self.tracking_val2 * 0.3) * DTMULT)
     end
 end
 
