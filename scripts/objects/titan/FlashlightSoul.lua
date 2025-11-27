@@ -57,7 +57,7 @@ end
 
 function FlashlightSoul:draw()
     self.light_timer = self.light_timer + DTMULT
-    self.light_radius = MathUtils.approach(self.light_radius, self.light_radius_goal, math.abs(self.light_radius_goal - self.light_radius) * 0.1)
+    self.light_radius = MathUtils.approach(self.light_radius, self.light_radius_goal, (math.abs(self.light_radius_goal - self.light_radius) * 0.1) * DTMULT)
 
 	if not self.transitioning then
 		Draw.setColor(COLORS.white)
@@ -65,7 +65,7 @@ function FlashlightSoul:draw()
 		while i <= 0.5 do
 			draw_set_alpha((0.5 - (i * 0.5)) * 0.5)
 			love.graphics.circle("fill", 0, 0, (self.light_radius * i * 2) + (math.sin(self.light_timer) * 0.5))
-			i = i + math.max(0.025, 0.1 - (((math.pow(i * 10, 1.035) / 10) - 0.25) / 3)) * DTMULT
+			i = i + math.max(0.025, 0.1 - (((math.pow(i * 10, 1.035) / 10) - 0.25) / 3))
 		end
 
 		draw_set_alpha(1)

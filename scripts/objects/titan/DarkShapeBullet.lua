@@ -118,8 +118,8 @@ function DarkShapeBullet:chaseHeart()
     local hx, hy = Game.battle.soul.x, Game.battle.soul.y
 
     if (MathUtils.dist(self.x, self.y, hx, hy) < Game.battle.soul.light_radius) and self.color ~= COLORS.red then
-        self.myspeed = MathUtils.approach(self.myspeed, 0.7 + (1 - self.light), 0.15 * self.speedfactor * self.speed_max_multiplier)
-        self.light = MathUtils.approach(self.light, 1, self.light_rate)
+        self.myspeed = MathUtils.approach(self.myspeed, 0.7 + (1 - self.light), (0.15 * self.speedfactor * self.speed_max_multiplier) * DTMULT)
+        self.light = MathUtils.approach(self.light, 1, self.light_rate * DTMULT)
 
         if Game.battle.soul.ominous_loop then
 			Game.battle.soul.ominous_decline = false
@@ -136,8 +136,8 @@ function DarkShapeBullet:chaseHeart()
 			particle.layer = self.layer
         end
     else
-        self.myspeed = MathUtils.approach(self.myspeed, self.speed_max * self.speed_max_multiplier, self.accel * self.speed_max_multiplier * (1 - self.light))
-        self.light = MathUtils.approach(self.light, 0, self.light_recover)
+        self.myspeed = MathUtils.approach(self.myspeed, self.speed_max * self.speed_max_multiplier, (self.accel * self.speed_max_multiplier * (1 - self.light)) * DTMULT)
+        self.light = MathUtils.approach(self.light, 0, self.light_recover * DTMULT)
     end
 end
 
@@ -181,7 +181,7 @@ function DarkShapeBullet:updateStepZero()
     end
 
     if self.alpha ~= 1 then
-        self.alpha = MathUtils.approach(self.alpha, 1, 0.025)
+        self.alpha = MathUtils.approach(self.alpha, 1, 0.025 * DTMULT)
     
         if self.alpha == 1 then
             self.physics.direction = MathUtils.angle(self.x, self.y, Game.battle.soul.x, Game.battle.soul.y)
@@ -196,8 +196,8 @@ function DarkShapeBullet:updateStepZero()
         self.xscale = self.alpha
         self.yscale = self.alpha
     else
-        self.xscale = self.alpha + ((self.timer % 2) * 0.1)
-        self.yscale = self.alpha + ((self.timer % 2) * 0.1)
+        self.xscale = self.alpha + ((self.timer % 2) * 0.1) * DTMULT
+        self.yscale = self.alpha + ((self.timer % 2) * 0.1) * DTMULT
     end
     self:setScale(self.xscale, self.yscale)
 
@@ -207,7 +207,7 @@ function DarkShapeBullet:updateStepZero()
         return
     end
 
-    self.tracking_val = MathUtils.approach(self.tracking_val, 16, 0.025)
+    self.tracking_val = MathUtils.approach(self.tracking_val, 16, 0.025 * DTMULT)
     if self.can_chase_heart and Game.battle.soul then
         self:chaseHeart()
     end
