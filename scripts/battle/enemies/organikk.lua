@@ -261,7 +261,7 @@ function Organikk:update()
             for _, note in ipairs(notes) do
                 Assets.stopSound("organ/" .. note)
             end
-            local rand = MathUtils.randomInt(7)
+            local rand = MathUtils.randomInt(1, 8)
             Assets.playSound("organ/" .. notes[rand])
             if self.organsoundtimer >= 1  then self.organsoundplayed[1] = true end
             if self.organsoundtimer >= 8  then self.organsoundplayed[2] = true end
