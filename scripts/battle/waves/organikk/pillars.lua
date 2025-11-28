@@ -50,13 +50,13 @@ function LongNotes:onStart()
 end
 
 function LongNotes:onEnd()
-    self.b:remove()
+    if self.b then self.b:remove() end -- checks for self.b in case wave ended with debug
     self.del = true
-    if self.b.charge_sfx then
+    if self.b and self.b.charge_sfx then
         self.b.charge_sfx:stop()
         self.b.charge_sfx = nil
     end
-    if self.b.highlight then
+    if self.b and self.b.highlight then
         self.b.highlight:remove()
     end
     Assets.stopSound("harmonize_act_b")

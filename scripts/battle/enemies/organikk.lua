@@ -96,7 +96,7 @@ function Organikk:onAct(battler, name)
             Game.battle:addChild(particle)
         end
 
-        if Game.battle.wicabel_perform then
+        if Game.battle.wicabel_tuning then
             Assets.playSound("act_perform_better")
             self:addMercy(100)
             return "* You performed a tune! It was\nsuper effective!"
@@ -261,7 +261,7 @@ function Organikk:update()
             for _, note in ipairs(notes) do
                 Assets.stopSound("organ/" .. note)
             end
-            local rand = MathUtils.randomInt(7)
+            local rand = MathUtils.randomInt(1, 8)
             Assets.playSound("organ/" .. notes[rand])
             if self.organsoundtimer >= 1  then self.organsoundplayed[1] = true end
             if self.organsoundtimer >= 8  then self.organsoundplayed[2] = true end
