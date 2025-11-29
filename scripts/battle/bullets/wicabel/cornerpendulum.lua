@@ -20,6 +20,7 @@ function CornerPendulum:init(x, y)
     self.collidable = false
 	self.destroy_on_hit = false
 	self.damage = 65
+	self.tp = 1.6
 end
 
 function CornerPendulum:update()
@@ -69,8 +70,38 @@ function CornerPendulum:update()
 	local direction = math.deg(self.physics.direction)
 	if (self.x >= self.swingtarget_x and (direction > 330 or direction < 30) and self.side == 1)
 	or (self.x <= self.swingtarget_x and (direction > 150 or direction < 210) and self.side == -1) then
-		self.x = self.swingtarget_x
-		self.y = self.swingtarget_y
+		self.x = self.swingtarget_x - 16
+		self.y = self.swingtarget_y - 16
+		Game.battle.arena.sprite.shake_ = 90
+		Game.battle.arena.sprite.splash_x = self.x
+		Game.battle.arena.sprite.splash_x = self.y
+		self.wave.bullet_speed = 2.8 - (MathUtils.clamp(#Game.battle:getActiveEnemies() - 1, 0, 2) * 0.6)
+		if #Game.battle:getActiveEnemies() > 2 then
+			self.wave.bullet_dir_add = 42
+			self.wave.bullet_dir = self.wave.bullet_dir_add * (-0.5 + MathUtils.random(1))
+			self.wave.bullet_number = 4
+		else
+			self.wave.bullet_dir_add = 48
+			self.wave.bullet_dir = self.wave.bullet_dir_add * (-0.5 + MathUtils.random(1))
+			self.wave.bullet_number = 3
+		end
+		local splash = self.wave:spawnObject(PendulumSplash(), self.x, self.y)
+		splash.layer = self.layer
+		self.wave:spawnBullets(true, self.x, self.y)
+		Game.battle.timer:after(3/30, function()
+			local success = false
+			if #Game.battle:getActiveEnemies() <= 2 then
+				success = true
+			end
+			self.wave:spawnBullets(success, self.x, self.y)
+		end)
+		Game.battle.timer:after(6/30, function()
+			local success = false
+			if #Game.battle:getActiveEnemies() <= 1 then
+				success = true
+			end
+			self.wave:spawnBullets(success, self.x, self.y)
+		end)
 		self:remove()
 	end
 end
