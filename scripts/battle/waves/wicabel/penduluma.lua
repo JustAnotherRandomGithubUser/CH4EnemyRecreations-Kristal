@@ -10,6 +10,16 @@ function CornerPendulums:init()
 	self.btimer = 99
 	
 	self.pendulums = {}
+	self.bullet_speed = 2.8 - (MathUtils.clamp(#Game.battle:getActiveEnemies() - 1, 0, 2) * 0.6)
+	if #Game.battle:getActiveEnemies() > 2 then
+		self.bullet_dir_add = 42
+		self.bullet_dir = self.bullet_dir_add * (-0.5 + MathUtils.random(1))
+		self.bullet_number = 4
+	else
+		self.bullet_dir_add = 48
+		self.bullet_dir = self.bullet_dir_add * (-0.5 + MathUtils.random(1))
+		self.bullet_number = 3
+	end
 end
 
 function CornerPendulums:update()
@@ -73,15 +83,23 @@ function CornerPendulums:update()
 	self.btimer = self.btimer + DTMULT
 end
 
-function CornerPendulums:getEnemyRatio()
-    local enemies = #Game.battle:getActiveEnemies()
-    if enemies <= 1 then
-        return 1
-    elseif enemies == 2 then
-        return 1.6
-    elseif enemies >= 3 then
-        return 2.3
-    end
+function CornerPendulums:spawnBullets(success, x, y)
+	if success == true then
+		local dir = -(self.bullet_dir_add * ((self.bullet_number - 1) / 2)) + self.bullet_dir
+		local shootdir = math.floor(0.5 + math.deg(MathUtils.angle(x, y, Game.battle.arena.x, Game.battle.arena.y)) / 45) * 45
+		Assets.stopAndPlaySound("churchbell_short")
+		for i = 0, self.bullet_number do
+			local bullet = self:spawnBulletTo(Game.battle.mask, "wicabel/bellwave", x, y, math.rad(shootdir + dir), self.bullet_speed)
+			bullet.rotation = bullet.physics.direction
+			bullet:setScale(1.5)
+			dir = dir + self.bullet_dir_add
+		end
+		self.bullet_dir = self.bullet_dir + (self.bullet_dir_add / 3)
+		if self.bullet_dir > (self.bullet_dir_add / 2) then
+			self.bullet_dir = self.bullet_dir - self.bullet_dir_add
+		end
+	end
+	self.bullet_speed = self.bullet_speed - 0.8
 end
 
 function CornerPendulums:draw()
