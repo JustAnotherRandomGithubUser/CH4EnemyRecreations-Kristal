@@ -96,14 +96,15 @@ function WingladeCircle:update()
         local x_pos, y_pos = self.attacker.x, self.attacker.y - 16
         local x_soul, y_soul = Game.battle.soul.x, Game.battle.soul.y
         local angle = Utils.angle(x_pos, y_pos, x_soul, y_soul)
-        if total_enemies == 1 and ((self.shoot_counter > 0 and Utils.random(0, 2, 1) > 0) or self.shoot_counter > 2) then
-            angle = angle + math.rad(Utils.pick({-35, -20, 20, 35}))
+        if total_enemies == 1 and ((self.shoot_counter > 0 and MathUtils.randomInt(0, 2) > 0) or self.shoot_counter > 2) then
+            angle = angle + math.rad(TableUtils.pick({-35, -20, 20, 35}))
             self.shoot_counter = self.shoot_counter - 1
+        else
+            self.shoot_counter = self.shoot_counter + 1
         end
         local bullet = self:spawnBullet("winglade/ring", x_pos, y_pos, angle, 7.5)
         bullet:setLayer(self.attacker.layer - 0.01)
         self.timer = 0
-        self.shoot_counter = self.shoot_counter + 1
         self.alpha_set = false
     end
 

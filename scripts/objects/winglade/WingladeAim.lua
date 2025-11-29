@@ -76,7 +76,7 @@ function WingladeAim:update()
     end
 
     if self.reset then
-        self.attacker.rotation = Utils.lerp(self.attacker.rotation, 0, DTMULT * self.timer / 12) % math.rad(360)
+        self.attacker.rotation = MathUtils.lerp(self.attacker.rotation, 0, DTMULT * self.timer / 12) % math.rad(360)
         self.attacker.x = MathUtils.approachCurveDTMULT(self.attacker.x, self.attacker_init_x, 8)
         self.attacker.y = MathUtils.approachCurveDTMULT(self.attacker.y, self.attacker_init_y, 8)
         if self.attacker.x == self.attacker_init_x and self.attacker.y == self.attacker_init_y then
@@ -114,7 +114,7 @@ function WingladeAim:update()
             self.temp_angle = self.temp_angle % math.rad(360)
             self.turn = MathUtils.lerp(self.attacker.rotation, self.temp_angle - math.rad(90), 10 * DTMULT) % math.rad(360)
         end
-        
+
         if self.timer >= 19 and not self.code_2_executed then
             self.code_2_executed = true
             self.save_angle = self.attacker.rotation
@@ -123,7 +123,7 @@ function WingladeAim:update()
         if self.timer >= 19 and self.timer <= 24 and not self.first_turn then
             self.attacker.rotation = MathUtils.lerp(self.attacker.rotation, self.save_angle + math.rad(30), (self.timer - 19) / 5 * DTMULT)
         end
-        
+
         if self.timer >= 24 and self.timer < 34 then
             self.first_turn = true
             self.attacker.rotation = MathUtils.lerp(self.attacker.rotation, self.temp_angle - math.rad(90), (self.timer - 24) / 10 * DTMULT)
@@ -165,7 +165,7 @@ function WingladeAim:update()
             local spawn_y_middle = self.attacker.y + math.sin(self.temp_angle) * 24
             local range = 1
             if attackers == wave_attackers then range = 2 end
-            local speed = (3.75 - (0.5 * attackers)) + (0.25 * wave_attackers)
+            -- local speed = (3.75 - (0.5 * attackers)) + (0.25 * wave_attackers)
             local friction = -0.035 + 0.015
             for i = -range, range do
                 local spawn_x = spawn_x_middle + math.cos(self.temp_angle + math.rad(155) * MathUtils.sign(i)) * math.abs(i) * 40
