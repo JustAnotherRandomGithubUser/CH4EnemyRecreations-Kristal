@@ -8,17 +8,17 @@ local DarkShapeBullet, super = Class(Bullet)
 ---@param shrink_texture?  string|love.Image
 function DarkShapeBullet:init(x, y, texture, shrink_texture)
     super.init(self, x, y, texture, shrink_texture)
-    self.sprite:stop()          -- equivalent to `image_speed = 0` from OG Deltarune code.
+    self.sprite:stop()                      -- equivalent to `image_speed = 0` from OG Deltarune code.
 
     self.collidable = false
     self.alpha = 0
     self.tp = 0
     self.grazed = true
 
-    self.can_do_shrivel = true  -- Checks if `doShrivel()` can run. defaults to 'true'
-    self.can_do_pushback = true -- Checks if `doPushBack()` can run. defaults to 'true'
-    self.can_destroy = true     -- Checks if `destroy()` can run. defaults to 'true'
-    self.can_chase_heart = true -- Checks if `chaseHeart()` can run. defaults to 'true'
+    self.can_do_shrivel = true              -- Checks if `doShrivel()` can run. defaults to 'true'
+    self.can_do_pushback = true             -- Checks if `doPushBack()` can run. defaults to 'true'
+    self.can_destroy = true                 -- Checks if `destroy()` can run. defaults to 'true'
+    self.can_chase_heart = true             -- Checks if `chaseHeart()` can run. defaults to 'true'
 
     -- Initial direction of the bullet.
     if self.y >= Game.battle.arena.y then
@@ -27,6 +27,8 @@ function DarkShapeBullet:init(x, y, texture, shrink_texture)
         self.physics.direction = 110 + MathUtils.randomInt(10)
     end
 
+    -- Speed modifying variables
+    self.myspeed = 0                        -- Apparently `obj_darkshape` uses this instead of `speed`.
     self.speed_max = 2.25
     self.speed_max_multiplier = 1
     self.tracking_val = 16
@@ -34,22 +36,26 @@ function DarkShapeBullet:init(x, y, texture, shrink_texture)
     self.true_timer = 0
     self.fastval = 4
     self.accel = 0.15
-    self.individuality = MathUtils.randomInt(100)
 
     self.canbepushed = true
     self.pushback_radius = 48
-    self.myspeed = 0                        -- Apparently `obj_darkshape` uses this instead of `speed`. Doesn't effect the bullet in any way in Kristal??
 
+    -- Scaling variables
     self.xscale = 0
     self.yscale = 0
+    self.xface = 1
+    self.yface = 1
+    self.scalefactor = 1
 
-    self._texture = texture
-    self._shrink_texture = shrink_texture
+    self._texture = texture                 -- Callback for the bullet's default texture.
+    self._shrink_texture = shrink_texture   -- Callback for the bullet's shrinking texture.
+    self.image = 1                          -- Current frame of the bullet's shrinking animation.
+    self.radius = 20                        -- Radius to be used for the bullet's CircleCollider.
+    self.individuality = MathUtils.randomInt(100)
+
     self.light = 0                          -- Handles how much the bullet has been exposed to light.
     self.light_rate = 0.05                  -- Rate of how much `self.light` should increase.
     self.light_recover = 0.01               -- Rate of how much `self.light` should decrease.
-    self.image = 1                          -- Current frame of the bullet's shrinking animation.
-    self.radius = 20                        -- Radius to be used for the bullet's CircleCollider.
 
     -- Glow effect that appears when the bullet is being exposed to light.
     -- FX's amount is determined by `self.light`.
@@ -60,9 +66,6 @@ function DarkShapeBullet:init(x, y, texture, shrink_texture)
     self.shakeme = false
     self.timer = 0
     self.fast_timer = 0
-    self.xface = 1
-    self.yface = 1
-    self.scalefactor = 1
     self.ypush = 0
 end
 
@@ -199,7 +202,6 @@ function DarkShapeBullet:updateStepZero()
         self.xscale = self.alpha + ((self.timer % 2) * 0.1) * DTMULT
         self.yscale = self.alpha + ((self.timer % 2) * 0.1) * DTMULT
     end
-    self:setScale(self.xscale, self.yscale)
 
     if self.alpha == 1 then
         self.collidable = true
@@ -253,6 +255,8 @@ function DarkShapeBullet:updateStepOne()
 end
 
 function DarkShapeBullet:updateDrawZero()
+    self:setScale(self.xscale * self.xface * self.scalefactor, self.yscale * self.yface * self.scalefactor)
+
     local xoff = 0
     local yoff = 0
     if self.shakeme then

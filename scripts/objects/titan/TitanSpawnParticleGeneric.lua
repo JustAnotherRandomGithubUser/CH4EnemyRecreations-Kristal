@@ -1,4 +1,5 @@
 ---@class TitanSpawnParticleGeneric : Object
+---@overload fun(...) : TitanSpawnParticleGeneric
 local TitanSpawnParticleGeneric, super = Class(Object)
 
 function TitanSpawnParticleGeneric:init(x, y)

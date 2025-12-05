@@ -1,4 +1,5 @@
 ---@class TitanSpawnPurifySoul : Object
+---@overload fun(...) : TitanSpawnPurifySoul
 local TitanSpawnPurifySoul, super = Class(Object)
 
 function TitanSpawnPurifySoul:init(x, y)
