@@ -19,10 +19,6 @@ function TitanSpawn:init()
 
     self.can_freeze = false
 
-    self.waves = {
-		"debugging/darkshape_test"
-	}
-
     self.text = {
         "* You hear your heart beating in \nyour ears.",
         "* When did you start being \nyourself?",
@@ -45,6 +41,10 @@ function TitanSpawn:init()
 
 	self.t_siner = 0
     self.banish_act_index = 4
+
+    self.first_barrage = true
+    self.phaseturn = 1
+    self.difficulty = 0
 end
 
 function TitanSpawn:update()
@@ -202,6 +202,28 @@ end
 
 function TitanSpawn:getEnemyDialogue()
     return false
+end
+
+function TitanSpawn:onTurnEnd()
+    self.phaseturn = self.phaseturn + 1
+	
+    if self.phaseturn > 3 then
+        self.phaseturn = 2
+    end
+end
+
+function TitanSpawn:getNextWaves()
+    if self.phaseturn == 1 then
+        return { "titan_spawn/darkshapesintro" }
+    end
+    if self.phaseturn == 2 then
+        return { "titan_spawn/darkshapesspeedup" }
+    end
+    if self.phaseturn == 3 then
+        return { "titan_spawn/darkshapeswithred" }
+    end
+
+    return super.getNextWaves(self)
 end
 
 function TitanSpawn:onSpared()
