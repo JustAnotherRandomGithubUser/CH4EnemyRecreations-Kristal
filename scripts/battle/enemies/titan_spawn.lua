@@ -51,7 +51,7 @@ end
 
 function TitanSpawn:update()
     super.update(self)
-    if Game.battle.state == "MENUSELECT" and Game.tension >= 64 then
+    if Game.battle.state == "MENUSELECT" and Game.battle.state_reason == "ACT" and Game.tension >= 64 then
         self.t_siner = self.t_siner + (1 * DTMULT)
         if Game.battle.menu_items[self.banish_act_index] then
             Game.battle.menu_items[self.banish_act_index].color = function()
