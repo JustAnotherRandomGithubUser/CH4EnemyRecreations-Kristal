@@ -63,6 +63,13 @@ function DarkShapeBullet:init(x, y, texture, shrink_texture)
     self.highlight:setColor(1, 1, 1)
     self.highlight.amount = 0
 
+    -- Suble wave effect used when the bullet is spawning.
+    self.wave = self:addFX(ShaderFX("darkshape_wave", {
+        ["wave_timer"] = function() return self.timer end,
+        ["wave_mag"] = function() return 4 - (self.alpha * 4) end,
+        ["texsize"] = {SCREEN_WIDTH, SCREEN_HEIGHT}
+    }), "wave")
+
     self.shakeme = false
     self.timer = 0
     self.fast_timer = 0
@@ -125,8 +132,8 @@ function DarkShapeBullet:chaseHeart()
         self.light = MathUtils.approach(self.light, 1, self.light_rate * DTMULT)
 
         if Game.battle.soul.ominous_loop then
-			Game.battle.soul.ominous_decline = false
-			Game.battle.soul.ominous_volume = MathUtils.approach(Game.battle.soul.ominous_volume, 1, ((1 - Game.battle.soul.ominous_volume) * 0.15) * DTMULT)
+            Game.battle.soul.ominous_decline = false
+            Game.battle.soul.ominous_volume = MathUtils.approach(Game.battle.soul.ominous_volume, 1, ((1 - Game.battle.soul.ominous_volume) * 0.15) * DTMULT)
         end
 
         -- Spawn particles while bullet is shrinking.
@@ -136,7 +143,7 @@ function DarkShapeBullet:chaseHeart()
             particle.physics.direction = MathUtils.angle(hx, hy, particle.x, particle.y)
             particle.physics.speed = 1 + MathUtils.random(3)
             particle.shrink_rate = 0.2
-			particle.layer = self.layer
+            particle.layer = self.layer
         end
     else
         self.myspeed = MathUtils.approach(self.myspeed, self.speed_max * self.speed_max_multiplier, (self.accel * self.speed_max_multiplier * (1 - self.light)) * DTMULT)
@@ -156,16 +163,16 @@ function DarkShapeBullet:destroy()
             tp_blob.size = 2
         end
     end
-	
-	tp_blob:prime()
+    
+    tp_blob:prime()
 
     self:remove()
 end
 
 function DarkShapeBullet:update()
-	self:updateStepOne()
-	self:updateStepZero()
-	self:updateDrawZero()
+    self:updateStepOne()
+    self:updateStepZero()
+    self:updateDrawZero()
     super.update(self)
 end
 
