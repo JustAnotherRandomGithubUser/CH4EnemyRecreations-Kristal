@@ -110,7 +110,7 @@ function Winglade:onAct(battler, name)
 end
 
 function Winglade:onShortAct(battler, name)
-    if name == "Standard" then --X-Action
+    if name == "Standard" then
         Assets.stopAndPlaySound("pirouette", 0.7, 1.1)
         battler:setAnimation('pirouette')
         if battler.chara.id == "ralsei" then

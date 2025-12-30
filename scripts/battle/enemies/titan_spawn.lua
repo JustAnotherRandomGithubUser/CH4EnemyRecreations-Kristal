@@ -40,7 +40,11 @@ function TitanSpawn:init()
     self.dualhealcount = 0
 
 	self.t_siner = 0
-    self.banish_act_index = 4
+    if Game:hasPartyMember("susie") and Game:hasPartyMember("ralsei") then
+        self.banish_act_index = 4
+    else
+        self.banish_act_index = 3
+    end
 
     self.first_barrage = true
     self.phaseturn = 1
@@ -51,9 +55,9 @@ function TitanSpawn:update()
     super.update(self)
     if Game.battle.state == "MENUSELECT" and Game.tension >= 64 then
         self.t_siner = self.t_siner + (1 * DTMULT)
-        if Game.battle.menu_items[self.banish_act_index] then
+        if Game.battle.menu_items[self.banish_act_index] and Game.battle.menu_items[self.banish_act_index].name == "Banish" then
             Game.battle.menu_items[self.banish_act_index].color = function()
-                 return (ColorUtils.mergeColor(COLORS.yellow, COLORS.white, 0.5 + (math.sin(self.t_siner / 4) * 0.5)))
+                return (ColorUtils.mergeColor(COLORS.yellow, COLORS.white, 0.5 + (math.sin(self.t_siner / 4) * 0.5)))
             end
         end
     end
