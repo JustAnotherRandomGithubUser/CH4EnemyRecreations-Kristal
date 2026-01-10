@@ -90,7 +90,7 @@ function Spiral:update()
             Game.battle.timer:after(52/30, function()
                 bullet.physics.speed = 0
                 bullet.collidable = false
-				for _, bullet in ipairs(self.wave.bullets) do
+				for _, bullet in ipairs(self.wave.bullets) do -- Is this even used???
 					if MathUtils.dist(self.x, self.y, bullet.x, bullet.y) < 1 and bullet.id == "mizzle/coathanger" and bullet ~= self then
 						bullet:remove()
 					end
