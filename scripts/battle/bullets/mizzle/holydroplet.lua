@@ -7,6 +7,9 @@ function HolyDroplet:init(x, y)
     self:setOriginExact(16, 18)
 
     self.tp = (1/3) / 2.5
+	self.sprite.visible = false
+	
+	self.outline_tex = Assets.getTexture("battle/bullets/mizzle/holydroplet_outline")
 end
 
 function HolyDroplet:update()
