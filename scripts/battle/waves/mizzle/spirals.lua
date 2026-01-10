@@ -60,18 +60,20 @@ function Spirals:draw()
 	super.draw(self)
 	for _, bullet in ipairs(self.bullets) do
 		if bullet.id == "mizzle/holydroplet" then
+			Draw.setColor(bullet:getDrawColor())
 			Draw.draw(bullet.outline_tex, bullet.x, bullet.y, bullet.rotation, bullet.scale_x, bullet.scale_y, 16, 16)
 		end
 	end
 	for _, bullet in ipairs(self.bullets) do
 		if bullet.id == "mizzle/holydroplet" then
-			Draw.setColor(COLORS.teal)
+			Draw.setColor(0, 0.5, 0.5, bullet.alpha)
 			Draw.draw(bullet.sprite.texture, bullet.x + ((bullet.last_x - bullet.x) * FRAMERATE/30), bullet.y + ((bullet.last_y - bullet.y) * FRAMERATE/30), MathUtils.angle(bullet.last_x, bullet.last_y, bullet.x, bullet.y), bullet.scale_x, bullet.scale_y, 16, 16)
-			Draw.setColor(bullet.color)
+			Draw.setColor(bullet:getDrawColor())
 		end
 	end
 	for _, bullet in ipairs(self.bullets) do
 		if bullet.id == "mizzle/holydroplet" then
+			Draw.setColor(bullet:getDrawColor())
 			Draw.draw(bullet.sprite.texture, bullet.x, bullet.y, bullet.rotation, bullet.scale_x, bullet.scale_y, 16, 16)
 		end
 	end
