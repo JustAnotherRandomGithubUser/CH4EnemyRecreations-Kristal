@@ -31,7 +31,7 @@ function CornerPendulum:update()
 		self.collidable = true
 	end
 	
-	local shaftdir = -MathUtils.angle(self.x, self.y, self.swingpoint_x, self.swingpoint_y)
+	local shaftdir = MathUtils.angle(self.x, self.y, self.swingpoint_x, self.swingpoint_y)
 	local accel, swingdir
 	
 	if self.vertical_mirroring == 1 then
@@ -40,17 +40,17 @@ function CornerPendulum:update()
 		else
 			swingdir = shaftdir + math.rad(90)
 		end
-		accel = MathUtils.lengthDirY(0.5, swingdir)
+		accel = MathUtils.lengthDirY(0.5, -swingdir)
 	elseif self.vertical_mirroring == -1 then
 		if shaftdir < math.rad(90) or shaftdir > math.rad(270) then
 			swingdir = shaftdir + math.rad(90)
 		else
 			swingdir = shaftdir - math.rad(90)
 		end	
-		accel = -MathUtils.lengthDirY(0.5, swingdir)
+		accel = -MathUtils.lengthDirY(0.5, -swingdir)
 	end
-	self.physics.speed_x = self.physics.speed_x + MathUtils.lengthDirX(accel*DTMULT, swingdir)
-	self.physics.speed_y = self.physics.speed_y + MathUtils.lengthDirY(accel*DTMULT, swingdir)
+	self.physics.speed_x = self.physics.speed_x + MathUtils.lengthDirX(accel*DTMULT, -swingdir)
+	self.physics.speed_y = self.physics.speed_y + MathUtils.lengthDirY(accel*DTMULT, -swingdir)
 	
 	if swingdir < self.physics.direction - math.rad(180) then
 		swingdir = swingdir + math.rad(360)
@@ -63,8 +63,8 @@ function CornerPendulum:update()
 	else
 		self.physics.direction = swingdir - math.rad(180)
 	end
-	self.x = self.swingpoint_x - MathUtils.lengthDirX(self.swingdistance, shaftdir)
-	self.y = self.swingpoint_y - MathUtils.lengthDirY(self.swingdistance, shaftdir)
+	self.x = self.swingpoint_x - MathUtils.lengthDirX(self.swingdistance, -shaftdir)
+	self.y = self.swingpoint_y - MathUtils.lengthDirY(self.swingdistance, -shaftdir)
 	self.sprite.rotation = MathUtils.angle(self.swingpoint_x, self.swingpoint_y, self.x, self.y) - math.rad(90)
 	
 	local direction = math.deg(self.physics.direction)
