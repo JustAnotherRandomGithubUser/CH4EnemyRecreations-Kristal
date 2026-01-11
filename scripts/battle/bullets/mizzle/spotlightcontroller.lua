@@ -2,6 +2,8 @@ local SpotlightController, super = Class(Bullet)
 
 function SpotlightController:init(x, y)
     super.init(self, x, y, "battle/bullets/smallbullet")
+	self.can_graze = false
+	self.collidable = false
     self:setHitbox(nil)
     self.sprite.visible = false
 	self.remove_offscreen = false
