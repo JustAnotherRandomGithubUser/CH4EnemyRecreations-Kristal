@@ -117,7 +117,7 @@ function Guei:getEncounterText()
 					if spell:hasTag("spare_tired") then
 						multi = multi + 1
 						name = party.chara:getName()
-						spellname = spell:getCastName()
+						spellname = spell:getName():upper()
 						if spell:getTPCost(party.chara) < tp then
 							tp = spell:getTPCost(party.chara)
 						end
