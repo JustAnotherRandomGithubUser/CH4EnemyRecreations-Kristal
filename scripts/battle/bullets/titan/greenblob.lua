@@ -76,9 +76,9 @@ function GreenBlob:update()
     self.physics.speed = self.physics.speed * 0.85
 	
     if self.collidable then
-        local accel = self.acc / Utils.dist(self.x, self.y, Game.battle.soul.x + 2, Game.battle.soul.y + 2)
-        self.physics.direction = Utils.angle(self.x, self.y, Game.battle.soul.x, Game.battle.soul.y)
-        self.physics.speed = Utils.approach(self.physics.speed, self.max_speed, accel*DTMULT)
+        local accel = self.acc / MathUtils.dist(self.x, self.y, Game.battle.soul.x + 2, Game.battle.soul.y + 2)
+        self.physics.direction = MathUtils.angle(self.x, self.y, Game.battle.soul.x, Game.battle.soul.y)
+        self.physics.speed = MathUtils.approach(self.physics.speed, self.max_speed, accel*DTMULT)
     end
 end
 
