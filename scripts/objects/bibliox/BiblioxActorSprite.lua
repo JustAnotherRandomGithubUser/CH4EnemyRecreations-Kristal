@@ -32,21 +32,26 @@ end
 function BiblioxActorSprite:update()
     super.update(self)
 
-    self.animsiner = self.animsiner + 1 * DTMULT
+    if self.visible then
+        self.head.alpha = self.alpha
+        self.body.alpha = self.alpha
 
-    local anim = self.anim or "idle"
-    if anim == "idle" then
-        self.beardtimer = 0
-        self.head.x = self.x + 1 + (math.sin(self.animsiner / 10)) * 2
-        self.head:setSprite(self:getTexturePath("head"))
-        self.head:setFrame(math.floor(self.animsiner / 5))
-    elseif anim == "beard_stroke" then
-        if self.beardtimer < 32 then
-            self.beardtimer = self.beardtimer + 1 * DTMULT
+        self.animsiner = self.animsiner + 1 * DTMULT
+
+        local anim = self.anim or "idle"
+        if anim == "idle" then
+            self.beardtimer = 0
+            self.head.x = self.x + 1 + (math.sin(self.animsiner / 10)) * 2
+            self.head:setSprite(self:getTexturePath("head"))
+            self.head:setFrame(math.floor(self.animsiner / 5))
+        elseif anim == "beard_stroke" then
+            if self.beardtimer < 32 then
+                self.beardtimer = self.beardtimer + 1 * DTMULT
+            end
+            self.head:setPosition(1, 0)
+            self.head:setSprite(self:getTexturePath("head_beard_stroke"))
+            self.head:setFrame(1 + math.floor(self.beardtimer / 3))
         end
-        self.head:setPosition(1, 0)
-        self.head:setSprite(self:getTexturePath("head_beard_stroke"))
-        self.head:setFrame(1 + math.floor(self.beardtimer / 3))
     end
 end
 

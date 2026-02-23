@@ -21,7 +21,8 @@ function Spiral:update()
         self.made = true
     end
 
-    if Game.battle.wave_timer >= Game.battle.wave_length - 2/30 then
+    local remaining_time = Game.battle.wave_length - Game.battle.wave_timer
+    if remaining_time <= (2/30) then
         self:remove()
     end
 
