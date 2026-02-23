@@ -112,19 +112,16 @@ function ProofreadController:init(enemy, iseasy)
     highlight1.debug_select = false
     highlight1:setOrigin(0.5, 0.5)
     highlight1:setColor(COLORS["red"])
-    highlight1:play(1/6)
     self:addChild(highlight1)
 
     local highlight2 = Sprite("ui/battle/proofread/bubble_highlight", x, y)
     highlight2.debug_select = false
     highlight2:setOrigin(0.5, 0.5)
-    highlight2:play(1/6)
     self:addChild(highlight2)
 
     local highlight3 = Sprite("ui/battle/proofread/bubble_highlight", x, y+80)
     highlight3.debug_select = false
     highlight3:setOrigin(0.5, 0.5)
-    highlight3:play(1/6)
     self:addChild(highlight3)
 
     self.highlights = {
@@ -132,6 +129,8 @@ function ProofreadController:init(enemy, iseasy)
         [2] = highlight2,
         [3] = highlight3,
     }
+
+    self.highlightindex = 0
 
     Input.clear("confirm")
     self:setText("[instant]* Select the right spelling!", false)
@@ -211,6 +210,12 @@ function ProofreadController:update()
     super.update(self)
 
     self.timer = self.timer + 1 * DTMULT
+
+    self.highlightindex = self.highlightindex + 0.5 * DTMULT
+
+    self.highlights[1]:setFrame(math.floor(self.highlightindex))
+    self.highlights[2]:setFrame(math.floor(self.highlightindex))
+    self.highlights[3]:setFrame(math.floor(self.highlightindex))
 
     if not self.selectionmade then
         self.acttimer = self.acttimer + 1 * DTMULT
