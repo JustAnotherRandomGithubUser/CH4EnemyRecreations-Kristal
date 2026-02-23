@@ -9,7 +9,7 @@ function Diamond:init(x, y, dir, speed, rot)
     self.physics.friction = -1
     self:setScale(1)
     self:setOrigin(0.5, 0.5)
-    self.collider = PolygonCollider(self, {{11, 16}, {16, 14}, {21, 16}, {16, 18}})
+    self.collider = PolygonCollider(self, {{8, 15}, {16, 12}, {24, 15}, {16, 18}})
     self.g = 0
 end
 
