@@ -7,8 +7,8 @@ function MagicBook:init(x, y)
 
     self:setScale(1)
     self.destroy_on_hit = false
-    self.alpha = 0
     self.fadetarg = 1
+    self.alpha = 0
 
     self.timer = 0
     self.bullets = 2
@@ -20,10 +20,6 @@ function MagicBook:init(x, y)
     if (MathUtils.randomInt(50) == 0) then
         self.dog = true
     end
-
-    self.sameattacker = 0
-    self.sameattack = 0
-    self.ratio = 0
 end
 
 function MagicBook:update()
@@ -31,7 +27,7 @@ function MagicBook:update()
 
     self.physics.speed_x = MathUtils.approachCurveDTMULT(self.physics.speed_x, 0, 10)
     self.physics.speed_y = MathUtils.approachCurveDTMULT(self.physics.speed_y, 0, 12)
-    self.alpha = MathUtils.approach(self.alpha, self.fadetarg, 0.08333333333333333*DTMULT)
+    self.alpha = MathUtils.approach(self.alpha, self.fadetarg, 1/12*DTMULT)
 
     if self.timer == 8 then
         self.image_index = 3
@@ -94,7 +90,7 @@ function MagicBook:update()
 
         if self.spell == 2 then
             if self.timer == 16 then
-                if self.sameattack == 1 or self.boost == 1 or MathUtils.randomInt(5) < 2 then
+                if self.sameattack == 1 or self.boost > 0 or MathUtils.randomInt(5) < 2 then
                     self.xtarg = Game.battle.soul.x + 2
                     self.ytarg = Game.battle.soul.y + 2
                 else
@@ -103,13 +99,9 @@ function MagicBook:update()
                 end
                 
                 self.flip = -math.rad(TableUtils.pick{180, 0})
-
-                if self.flip == -math.rad(180) then
-                    self.flip_start = 1
-                end
             end
 
-            if (((self.timer % 3) == 1 and self.timer >= 16 and self.timer < 32)) then
+            if ((self.timer % 3) == 1 and self.timer >= 16 and self.timer < 32) then
                 local fire = self.wave:spawnBullet("bibliox/book_bullet", self.x, self.y)
                 fire.sprite_index = "fire"
                 fire.collider = CircleCollider(fire, 32, 32 + 4, 12)
@@ -117,30 +109,29 @@ function MagicBook:update()
                 fire.physics.gravity_direction = -math.rad(90)
                 fire.physics.gravity = 0.5
                 fire.physics.speed_y = fire.physics.speed_y + ((self.ytarg - fire.y) / ((2 * fire.physics.speed_y) / fire.physics.gravity))
+                fire.tp = 0.6
+                fire.time_bonus = 1
+                fire.bottomfade = 0
+                fire.wall_destroy = false
                 Game.battle.timer:lerpVar(fire.physics, "speed_x", fire.physics.speed_x, 0, 30)
             end
 
-            if (self.boost == 1 and self.timer > 38 and (self.timer % MathUtils.round(3)) == self.sameattacker) then
+            if (self.boost > 0 and self.timer > 38 and (self.timer % MathUtils.round(3)) == self.sameattacker) then
                 local _y = ((self.ytarg + 100) - ((self.timer - 38) * 10)) + 11
 
                 if (_y < (Game.battle.arena.y + 100) and _y > (Game.battle.arena.y - 80)) then
                     local add_fire = self.wave:spawnBullet("bibliox/book_bullet", self.xtarg, (_y + MathUtils.random(5)) - 10)
                     add_fire.sprite_index = "rouxls_fire"
                     add_fire:setHitbox(33, 5, 10, 7)
-                    add_fire.physics.direction = self.flip
-                    if(self.flip_start == 1) then
-                        add_fire.physics.speed_x = -2
-                        self.flip_start = 0
-                    else
-                        add_fire.physics.speed_x = 2
-                        self.flip_start = 1
-                    end
+                    add_fire.rotation = self.flip
+                    add_fire.physics.match_rotation = true
+                    add_fire:setSpeed(2, 0)
+
                     add_fire.layer = self.layer - 10
-                    add_fire.rotation = add_fire.physics.direction
-                    add_fire.scale_x = 0.1
                     Game.battle.timer:lerpVar(add_fire, "scale_x", 0, 1, 10)
                     Game.battle.timer:lerpVar(add_fire, "x", add_fire.x, add_fire.x + (add_fire.physics.speed_x * 15), 18)
                     Game.battle.timer:lerpVar(add_fire.physics, "speed_x", 0, add_fire.physics.speed_x * 5, 18)
+                    add_fire.scale_x = 0
                     self.flip = self.flip + -math.rad(180)
                 end
 

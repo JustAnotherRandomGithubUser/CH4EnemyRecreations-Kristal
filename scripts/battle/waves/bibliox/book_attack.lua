@@ -1,4 +1,4 @@
-local BookAttack, super = Class(Wave)
+local BookAttack, super = Class(Wave, "bibliox/book_attack")
 
 function BookAttack:init()
     super.init(self)
@@ -16,7 +16,7 @@ function BookAttack:init()
     self.made = false
     self.type = 140
     self.spell = 0
-    self.btimer = 0
+    self.btimer = 99
     self.special = 0
 end
 
@@ -26,10 +26,10 @@ function BookAttack:update()
     self.btimer = self.btimer + DTMULT
 
     local arena = Game.battle.arena
-    local maxtime = (5 + (35 * self.ratio) + (10 * ((self.spell == 0 and self.ratio == 1.5) and 1 or 0))) - (24 * ((self.spell == 0 and self.ratio == 2.3) and 1 or 0))
+    local maxtime = 5 + (35 * self.ratio) + (10 * ((self.spell == 0 and self.ratio == 1.5) and 1 or 0)) - (24 * ((self.spell == 0 and self.ratio == 2.3) and 1 or 0))
 
-	for sameattacker = 0, #self.enemies-1 do
-        if self.type >= 140 or self.type <= 143 then
+    if self.type >= 140 and self.type <= 143 then
+	    for sameattacker = 0, #self.enemies-1 do
             if self.made == false then
                 if self.type > 140 then
                     self.spell = self.type - 140
@@ -40,13 +40,18 @@ function BookAttack:update()
                 self.made = true
                 self.btimer = maxtime - (8 * sameattacker)
             end
+        end
 
-            local remaining_time = Game.battle.wave_length - Game.battle.wave_timer
-            if self.btimer > maxtime and remaining_time > (50/30) then
-                self.btimer = 0
 
+        local remaining_time = Game.battle.wave_length - Game.battle.wave_timer
+        if self.btimer > maxtime and remaining_time > (50/30) then
+            self.btimer = 0
+
+	    	for sameattacker = 0, #self.enemies-1 do
                 local bookside = MathUtils.sign((sameattacker % 2) - 0.5) * MathUtils.sign((self.special % 2) - 0.5)
-                local book = self:spawnBullet("bibliox/magic_book", arena.x + ((170 + MathUtils.random(20)) * bookside), (arena.y + 70) - (45 * sameattacker) - MathUtils.random(120 - (45 * self.sameattack)))
+                local book_x, book_y = arena.x + ((170 + MathUtils.random(20)) * bookside), (arena.y + 70) - (45 * sameattacker) - MathUtils.random(120 - (45 * self.sameattack))
+
+                local book = self:spawnBullet("bibliox/magic_book", book_x, book_y)
                 book.timer = 0 - math.floor(sameattacker * 7)
                 book.ratio = self.ratio
                 book.open_side = bookside
@@ -58,18 +63,19 @@ function BookAttack:update()
                 book.image_index = book.spell
 
                 local boost = 1
-                if self.spell ~= 2 then
+                if self.type ~= 104 or self.spell ~= 2 then
                     boost = 0
                 end
 
                 book.boost = boost
-                self.special = self.special + 1
             end
+            
+            self.special = self.special + 1
+        end
 
-            if remaining_time > (10/30) then
-                for _, attacker in ipairs(self.enemies) do
-                    attacker.sprite:fadeToSpeed(0, 0.1)
-                end
+        if remaining_time > (10/30) then
+            for _, attacker in ipairs(self.enemies) do
+                attacker.sprite:fadeToSpeed(0, 0.1)
             end
         end
     end

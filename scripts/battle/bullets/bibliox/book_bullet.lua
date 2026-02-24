@@ -11,11 +11,12 @@ function BookBullet:init(x, y)
     self.alpha = 1
     self.damage = 80
     self.tp = 1.2
+    self.remove_offscreen = false
 
     self.spin = false
     self.spinspeed = 0
     self.bottomfade = 0
-    self.wall_destroy = 1
+    self.wall_destroy = true
     self.insidebox = 0
 end
 
@@ -27,7 +28,7 @@ function BookBullet:update()
         self:remove()
     end
 
-    if self.wall_destroy == 1 then
+    if self.wall_destroy == false then
         if self.x < -80 then
             self:remove()
         elseif self.x > 760 then
