@@ -73,7 +73,9 @@ function DarkShapeManager:createPattern()
             self.noise_played = true
         end
 
-        if (self.timer % 12) == 0 then
+        local old_modu = self.old_timer % 12
+        local modu = self.timer % 12
+        if (modu < old_modu) then
             local tempdir = MathUtils.randomInt(360)
             local tempdist = 150 + MathUtils.randomInt(50)
             local x, y = Game.battle.arena.x + MathUtils.lengthDirX(tempdist, math.rad(tempdir)), Game.battle.arena.y + MathUtils.lengthDirY(tempdist, math.rad(tempdir))
@@ -95,7 +97,9 @@ function DarkShapeManager:createPattern()
             self.noise_played = true
         end
 
-        if (self.timer % 24) == 0 then
+        local old_modu = self.old_timer % 24
+        local modu = self.timer % 24
+        if (modu < old_modu) then
             local tempdir = MathUtils.randomInt(360)
             local tempdist = 150 + MathUtils.randomInt(50)
             local x, y = Game.battle.arena.x + MathUtils.lengthDirX(tempdist, math.rad(tempdir)), Game.battle.arena.y + MathUtils.lengthDirY(tempdist, math.rad(tempdir))
@@ -115,8 +119,10 @@ function DarkShapeManager:createPattern()
 
         self.timer_alt = self.timer_alt + DTMULT
         self.speedup_timer = self.speedup_timer + DTMULT
-
-        if (self.timer % 16) == 0 then
+        
+        local old_modu = self.old_timer % 16
+        local modu = self.timer % 16
+        if (modu < old_modu) then
             self.timer_alt = self.timer_alt - math.floor((self.timer_alt_goal * 0.5) + MathUtils.random(self.timer_alt_goal))
             self.timer_alt_goal = MathUtils.approach(self.timer_alt_goal, 20, 4*DTMULT)
             local tempdir = self.random_offset + math.deg(math.tan(self.speedup_timer * 0.0375))
@@ -140,6 +146,7 @@ function DarkShapeManager:createPattern()
 end
 
 function DarkShapeManager:update()
+    self.old_timer = self.timer
     self.timer = self.timer + DTMULT
 
     if Game.battle.wave_timer >= Game.battle.wave_length - 1/30 then

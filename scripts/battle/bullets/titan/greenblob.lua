@@ -73,12 +73,12 @@ function GreenBlob:update()
 
     self:setColor({self.r, self.g, self.b})
     self.sprite:setFrame(1 + math.floor(self.image_index % 6))
-    self.physics.speed = self.physics.speed * 0.85
+    self:setSpeed(self.physics.speed * (0.85 ^ DTMULT))
 	
     if self.collidable then
         local accel = self.acc / MathUtils.dist(self.x, self.y, Game.battle.soul.x + 2, Game.battle.soul.y + 2)
         self.physics.direction = MathUtils.angle(self.x, self.y, Game.battle.soul.x, Game.battle.soul.y)
-        self.physics.speed = MathUtils.approach(self.physics.speed, self.max_speed, accel*DTMULT)
+        self:setSpeed(MathUtils.approach(self.physics.speed, self.max_speed, accel*DTMULT))
     end
 end
 
