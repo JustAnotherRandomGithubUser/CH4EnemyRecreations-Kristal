@@ -53,11 +53,6 @@ function Balthizard:init()
 
     self.killable = true
 
-    self.lightuptimer = 0
-    self.lightuptime = false
-
-    self.fires = {}
-
     self.lightup = false
     self.lightupmessage = false
 end
@@ -79,12 +74,58 @@ function Balthizard:onAct(battler, name)
         end
         return
     elseif name == "LightUp" then
+        local ralsei = Game.battle:getPartyBattler("ralsei")
+        local b = 0
+        local fires = {}
+        local function summonFire()
+            local rand = MathUtils.randomInt(30)
+            Assets.playSound("wing")
+            for i = 1, 9 do
+                local fire = BalthizardFire(ralsei.x + 24, ralsei.y - 80) -- ehh seems somewhat correct at least
+                fire.physics.direction = -math.rad(b * 45 + rand)
+                fire.physics.speed = 14
+                fire.physics.gravity_direction = -math.rad(270)
+                fire.physics.gravity = 0.4
+                fire:setScale(1.5)
+                fire.layer = ralsei.layer + 0.1
+                Game.battle:addChild(fire)
+                table.insert(fires, fire)
+                b = b + 1
+            end
+        end
         Game.battle:startActCutscene(function(cutscene)
             cutscene:text("* Ralsei lit up!")
-            self.lightuptime = true
-            cutscene:wait(function() return self.lightuptimer >= 50 end)
-            self.lightuptime = false
-            self.lightuptimer = 0
+            ralsei:setSprite("battle/spell")
+            ralsei.sprite:play(1/15, false, function() ralsei:setSprite("battle/spellend") end)
+            cutscene:wait(16/30)
+            summonFire()
+            cutscene:wait(1/30)
+            local screenflash = Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
+            screenflash.color = {1, 1, 1}
+            screenflash.alpha = 0
+            screenflash.layer = BATTLE_LAYERS["top"]
+            Game.battle:addChild(screenflash)
+            screenflash:fadeTo(1, 20/30, function()
+                Game.battle.timer:after(2/30, function()
+                    for _,fire in ipairs(fires) do
+                        fire:remove()
+                    end
+                    screenflash:fadeTo(0, 50/30, function() screenflash:remove() end)
+                end)
+            end)
+            cutscene:wait(4/30)
+            summonFire()
+            cutscene:wait(5/30)
+            summonFire()
+            cutscene:wait(5/30)
+            summonFire()
+            cutscene:wait(3/30)
+            ralsei:setAnimation("battle/idle")
+            Assets.playSound("rocket", 0.9, 0.9)
+            self.lightup = true
+            self.lightupmessage = true
+            self.sprite.lightup = true
+            cutscene:wait(11/30)
             self:addMercy(50)
             local line1 = "* The room got smokey!"
             local line2 = "* Other enemies became TIRED!"
@@ -173,43 +214,6 @@ function Balthizard:update()
     if self.mercy >= 100 and not self.sprite.spareable then
         self.sprite.spareable = true
         self:setAnimation("spared")
-    end
-
-    if self.lightuptime then
-        local ralsei = Game.battle:getPartyBattler("ralsei")
-        if self.lightuptimer == 0 then
-            ralsei:setSprite("battle/spell")
-            ralsei.sprite:play(1/15, false, function() ralsei:setSprite("battle/spellend") end)
-        end
-        if self.lightuptimer == 16 or self.lightuptimer == 22 or self.lightuptimer == 28 or self.lightuptimer == 34 then
-            local b = 0
-            local rand = MathUtils.randomInt(30)
-            Assets.playSound("wing")
-            for i = 1, 9 do
-                local fire = BalthizardFire(ralsei.x + 34, ralsei.y - 70) -- ehh seems somewhat correct at least
-                fire.physics.direction = -math.rad(b * 45 + rand)
-                fire.physics.speed = 14
-                fire.physics.gravity_direction = -math.rad(270)
-                fire.physics.gravity = 0.4
-                fire:setScale(1.5)
-                fire.layer = ralsei.layer + 0.1
-                Game.battle:addChild(fire)
-                table.insert(self.fires, fire)
-                b = b + 1
-            end
-        end
-        if self.lightuptimer == 18 then
-            local screenflash = BalthizardScreenFlash(self.fires)
-            Game.battle:addChild(screenflash)
-        end
-        if self.lightuptimer == 38 then
-            ralsei:setAnimation("battle/idle")
-            Assets.playSound("rocket", 0.9, 0.9)
-            self.lightup = true
-            self.lightupmessage = true
-            self.sprite.lightup = true
-        end
-        self.lightuptimer = self.lightuptimer + 1 * DTMULT
     end
 end
 
