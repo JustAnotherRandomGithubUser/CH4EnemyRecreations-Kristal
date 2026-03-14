@@ -193,7 +193,7 @@ function TitanSpawn:onAct(battler, name)
         return
     elseif name == "Banish" then
         battler:setAnimation("act")
-        Game.battle:startCutscene(function(cutscene)
+        Game.battle:startActCutscene(function(cutscene)
             cutscene:text("* "..battler.chara:getName().."'s SOUL emitted a brilliant \nlight!")
             battler:flash()
 
