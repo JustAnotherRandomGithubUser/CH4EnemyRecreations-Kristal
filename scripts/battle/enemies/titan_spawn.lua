@@ -35,16 +35,18 @@ function TitanSpawn:init()
     self:getAct("Check").description = "Consider\nstrategy"
     self:registerAct("Brighten", "Powerup\nlight", "all", 4)
     self:registerAct("DualHeal", "Heal\nparty", {"susie", "ralsei"}, 16)
-    self:registerAct("Banish",   "Defeat\nenemy",  nil,   64)
+    local banish = self:registerAct("Banish",   "Defeat\nenemy",  nil,   64)
+    banish.color = function()
+        if Game:getTension() >= 64 then
+            return (ColorUtils.mergeColor(COLORS.yellow, COLORS.white, 0.5 + (math.sin(self.t_siner / 4) * 0.5)))
+        else
+            return COLORS.white
+        end
+    end
 
     self.dualhealcount = 0
 
 	self.t_siner = 0
-    if Game:hasPartyMember("susie") and Game:hasPartyMember("ralsei") then
-        self.banish_act_index = 4
-    else
-        self.banish_act_index = 3
-    end
 
     self.first_barrage = true
     self.phaseturn = 1
@@ -57,11 +59,6 @@ function TitanSpawn:update()
     super.update(self)
     if Game.battle.state == "MENUSELECT" and Game.battle.state_reason == "ACT" and Game.tension >= 64 then
         self.t_siner = self.t_siner + (1 * DTMULT)
-        if Game.battle.menu_items[self.banish_act_index] then
-            Game.battle.menu_items[self.banish_act_index].color = function()
-                return (ColorUtils.mergeColor(COLORS.yellow, COLORS.white, 0.5 + (math.sin(self.t_siner / 4) * 0.5)))
-            end
-        end
     end
 end
 
