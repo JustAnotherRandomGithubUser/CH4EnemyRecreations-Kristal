@@ -142,7 +142,7 @@ function TitanSpawn:onAct(battler, name)
             local ralsei = Game.battle:getPartyBattler("ralsei")
             local canproceed = false
             local hashealed = false
-            Game.battle.timer:after(7 / 30, function()
+            Game.battle.timer:after(10 / 30, function()
                 susie:setAnimation("heal_charge") -- Susie starts the animation with the effects
                 Assets.playSound("boost")
                 battler:flash()
@@ -155,7 +155,7 @@ function TitanSpawn:onAct(battler, name)
                 soul:setScale(2, 2)
                 Game.battle:addChild(soul)
             end)
-            Game.battle.timer:after(24 / 30, function()
+            Game.battle.timer:after(20 / 30, function()
                 ralsei:setAnimation("battle/spell_ready") -- Ralsei starts the animation after a pause
                 canproceed = true
             end)
@@ -165,7 +165,8 @@ function TitanSpawn:onAct(battler, name)
             ralsei:setAnimation("battle/spell", function()
                 for _,party in ipairs(Game.battle.party) do
                     local healnum = MathUtils.round((susie.chara:getStat("magic") + ralsei.chara:getStat("magic")) * 6)
-                    Game.battle:applyHealBonuses(healnum, "susie") -- ralsei or susie??? Maybe needs 2 heal bonus appliers?????
+                    healnum = Game.battle:applyHealBonuses(healnum, susie.chara)
+                    healnum = Game.battle:applyHealBonuses(healnum, ralsei.chara)
                     local healmultiplier = 1.5
                     if self.dualhealcount == 2 then
                         healmultiplier = 1
