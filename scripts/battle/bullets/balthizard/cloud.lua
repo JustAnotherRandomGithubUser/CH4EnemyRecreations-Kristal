@@ -34,7 +34,7 @@ function Cloud:init(x, y)
 
     -- The cloud tries to deal a total of 5 damage / frame in 30 FPS
     -- This is eyeballed!!!! I couldnt find the original code
-    self.inv_timer = 0.2/30
+    self.inv_frames = 0.2
     self.regraze_timer = 0
     self.manager = nil -- Defined in cloud_manager
 end
@@ -150,7 +150,7 @@ function Cloud:getBattlerTarget()
 end
 
 function Cloud:onDamage(soul)
-    for i = 1, math.max(DT / self.inv_timer, 1) do
+    for i = 1, math.max(DT / self.inv_frames, 1) do
         local battler = self:getBattlerTarget()
         if battler.chara:getHealth() > 1 then
             battler.chara:setHealth(battler.chara:getHealth() - 1)
@@ -159,7 +159,7 @@ function Cloud:onDamage(soul)
         end
     end
 
-    soul.inv_timer = self.inv_timer
+    Game.inv_frames = self.inv_frames
 
     if self.manager then
         self.manager.hurt_notify_timer = self.manager.hurt_notify_timer - DTMULT

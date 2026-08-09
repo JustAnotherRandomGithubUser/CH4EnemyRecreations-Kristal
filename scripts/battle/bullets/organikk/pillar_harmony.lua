@@ -320,7 +320,7 @@ function PillarHarmony:onCollide(soul)
     if self.green then
         self.touching_player = 2
     else
-        if soul.inv_timer == 0 then
+        if Game.inv_frames <= 0 then
             self:onDamage(soul)
         end
     end

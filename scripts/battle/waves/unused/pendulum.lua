@@ -16,7 +16,7 @@ function PendulumCH4:onStart()
     local ratio = self:getEnemyRatio()
     local arena = Game.battle.arena
 
-    self.pendulum = self:spawnBullet("pendulum", SCREEN_WIDTH/2, arena.y - 200)
+    self.pendulum = self:spawnBullet("wicabel/pendulum", SCREEN_WIDTH/2, arena.y - 200)
     self.pendulum.timer = 8 - math.floor(self.sameattacker * 10 * ratio)
 
     self.debug_render = true

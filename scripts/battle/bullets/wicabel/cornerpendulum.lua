@@ -20,7 +20,12 @@ function CornerPendulum:init(x, y)
     self.collidable = false
 	self.remove_offscreen = false
 	self.destroy_on_hit = false
-	self.damage = 65
+
+    self.damage = 45
+    if #Game.party > 1 then -- In DR, this originally just checked if obj_herosusie was present, but I made it like this to account for if the party consists of more than just one member.
+        self.damage = 65
+    end
+
 	self.tp = 1.6
 	self.accel = 0
 end
@@ -28,8 +33,9 @@ end
 function CornerPendulum:update()
     super.update(self)
 
+	local old_a = self.alpha
 	self.alpha = self.alpha + 0.1 * DTMULT
-	if self.alpha >= 1.5 then
+	if old_a < 1.5 and self.alpha >= 1.5 then
 		self.collidable = true
 	end
 	
@@ -54,8 +60,8 @@ function CornerPendulum:update()
 		accel = -MathUtils.lengthDirY(0.5, swingdir)
 	end
 	self.accel = self.accel + accel * DTMULT
-	self.physics.speed_x = MathUtils.lengthDirX(self.accel, swingdir) * DTMULT
-	self.physics.speed_y = MathUtils.lengthDirY(self.accel, swingdir) * DTMULT
+	self.physics.speed_x = MathUtils.lengthDirX(self.accel, swingdir)
+	self.physics.speed_y = MathUtils.lengthDirY(self.accel, swingdir)
 	
 	self.physics.direction = swingdir
 	self.x = self.swingpoint_x - MathUtils.lengthDirX(self.swingdistance, shaftdir)

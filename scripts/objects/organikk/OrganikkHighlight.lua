@@ -21,7 +21,7 @@ function OrganikkHighlight:update()
     end
 
     self.alpha = self.alpha + 0.2 * DTMULT
-    self.scale_y = MathUtils.lerp(self.scale_y, -2, 0.2)
+    self.scale_y = MathUtils.lerp(self.scale_y, -2, 0.2 * DTMULT)
 end
 
 return OrganikkHighlight

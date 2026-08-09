@@ -125,4 +125,18 @@ function MathUtils.angleLerp(a, b, t)
     return a + MathUtils.lerp(0, diff, t)
 end
 
+local function median(...)
+    local vals = { ... }
+    local count = #vals
+    if count == 0 then return 0 end
+
+    table.sort(vals)
+    return vals[math.ceil(count / 2)]
+end
+
+function MathUtils.angleChange(arg0, arg1, arg2)
+    arg0 = median(-arg2, arg2, MathUtils.angleDiff(arg1, arg0))
+    return arg0
+end
+
 return MathUtils

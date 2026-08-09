@@ -14,9 +14,9 @@ function actor:initChapter2()
     }, false)
 
     TableUtils.merge(self.offsets, {
-        ["pirouette"] = {0, 0},
+        ["pirouette"] = {1, -1},
         ["nuzzle"] = {-1, 0},
-        ["sing"] = {0, 0},
+        ["sing"] = {2, -2},
     }, false)
 end
 

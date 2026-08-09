@@ -1,9 +1,9 @@
----@class CherubFeather : Sprite
----@overload fun(...) : CherubFeather
-local CherubFeather, super = Class(Sprite)
+---@class TitanCherubFeather : Sprite
+---@overload fun(...) : TitanCherubFeather
+local TitanCherubFeather, super = Class(Sprite)
 
-function CherubFeather:init(x, y)
-    super.init(self, "effects/titan/cherub_feathers", x, y)
+function TitanCherubFeather:init(x, y)
+    super.init(self, "effects/cherub_feathers", x, y)
 	
 	self:stop()
 	self:setFrame(MathUtils.randomInt(1, (self.frames and #self.frames or 1) + 1))
@@ -22,7 +22,7 @@ function CherubFeather:init(x, y)
     self:setScale(2,2)
 end
 
-function CherubFeather:update()
+function TitanCherubFeather:update()
 	if self.physics.speed < 5 then
 		self.physics.friction = 0.2
 	end
@@ -49,4 +49,4 @@ function CherubFeather:update()
     super.update(self)
 end
 
-return CherubFeather
+return TitanCherubFeather

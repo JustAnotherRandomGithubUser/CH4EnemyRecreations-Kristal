@@ -1,10 +1,10 @@
 {
     "id": "CH4EnemyRecreations",
     "version": "1.0.0",
-    "engineVersion": "0.10.0-dev",
+    "engineVersion": "0.11.0-dev",
 
     "authors": [
-        "J.A.R.U.",            // Manager of the library. 
+        "JaruEthaus",          // Manager of the library. 
                                // Also recreated some things for Guei and the Titan Spawn, as well as a handful of enemy attacks.
 
         "NelleMonelle",        // Recreated nearly all of the ActorSprites for the enemies, a majority of their ACTs, and made their enemy & encounter files.

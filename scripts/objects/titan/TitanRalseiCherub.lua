@@ -1,8 +1,8 @@
----@class RalseiCherub : Object
----@overload fun(...) : RalseiCherub
-local RalseiCherub, super = Class(Object)
+---@class TitanRalseiCherub : Object
+---@overload fun(...) : TitanRalseiCherub
+local TitanRalseiCherub, super = Class(Object)
 
-function RalseiCherub:init(chara, x, y)
+function TitanRalseiCherub:init(chara, x, y)
     super.init(self, x, y)
 	
 	self.timer = 0
@@ -16,11 +16,11 @@ function RalseiCherub:init(chara, x, y)
 	self.yspawn = -5
 end
 
-function RalseiCherub:update()
+function TitanRalseiCherub:update()
 	super.update(self)
 end
 
-function RalseiCherub:onRemove(parent)
+function TitanRalseiCherub:onRemove(parent)
 	super.onRemove(self, parent)
 	for _, feather in ipairs(self.feathers) do
 		if feather and not feather:isRemoved() then
@@ -40,7 +40,7 @@ local function returnAlphaColor(color, value)
     }
 end
 
-function RalseiCherub:drawCharacter(object)
+function TitanRalseiCherub:drawCharacter(object)
     love.graphics.push()
     object:preDraw()
     object:draw()
@@ -48,7 +48,7 @@ function RalseiCherub:drawCharacter(object)
     love.graphics.pop()
 end
 
-function RalseiCherub:drawBeam(x, y, length, spread, dir, smooth)
+function TitanRalseiCherub:drawBeam(x, y, length, spread, dir, smooth)
 	local xx = x
 	local yy = y
 	local length = length
@@ -66,7 +66,7 @@ function RalseiCherub:drawBeam(x, y, length, spread, dir, smooth)
 	love.graphics.polygon("fill", xx, yy, end1.x + xx, end1.y + yy, end2.x + xx, end2.y + yy)
 end
 
-function RalseiCherub:draw()
+function TitanRalseiCherub:draw()
     super.draw(self)
 	local stupid_ass_chara_canvas = Draw.pushCanvas(640, 480)
 	self:drawCharacter(self.chara)
@@ -81,17 +81,17 @@ function RalseiCherub:draw()
 	if self.timer >= descent and self.descent_con < 1 then
 		self.descent_con = 1
 		Assets.playSound("sparkle_glock", 1, 1.1)
-		local feather = CherubFeather(self.x - 10, self.y - 50)
+		local feather = TitanCherubFeather(self.x - 10, self.y - 50)
 		feather.physics.direction = -math.rad(270 + MathUtils.randomInt(-30, -50))
         feather.layer = self.layer - 0.01
         Game.battle:addChild(feather)
 		table.insert(self.feathers, feather)
-		local feather = CherubFeather(self.x, self.y - 50)
+		local feather = TitanCherubFeather(self.x, self.y - 50)
 		feather.physics.direction = -math.rad(270 + MathUtils.randomInt(10, 10))
         feather.layer = self.layer - 0.01
         Game.battle:addChild(feather)
 		table.insert(self.feathers, feather)
-		local feather = CherubFeather(self.x + 10, self.y - 50)
+		local feather = TitanCherubFeather(self.x + 10, self.y - 50)
 		feather.physics.direction = -math.rad(270 + MathUtils.randomInt(30, 50))
         feather.layer = self.layer - 0.01
         Game.battle:addChild(feather)
@@ -148,7 +148,7 @@ function RalseiCherub:draw()
 	Draw.setColor(1,1,1,1)
 	if self.timer >= descent + 24 then
 		if self.timer >= descent + 24 and self.descent_con < 2 then
-            local cherub = Sprite("effects/titan/ralsei_cherub")
+            local cherub = Sprite("effects/cherub/ralsei")
             cherub:setOrigin(0.5, 0.5)
             cherub:setScale(2, 2)
             cherub:setPosition(self.x + 30 + self.xoff, self.y + self.yoff)
@@ -178,4 +178,4 @@ function RalseiCherub:draw()
 	self.timer = self.timer + DTMULT
 end
 
-return RalseiCherub
+return TitanRalseiCherub

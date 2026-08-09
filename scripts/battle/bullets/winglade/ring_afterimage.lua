@@ -8,6 +8,7 @@ function RingAfterimage:init(x, y, dir, speed, alpha)
     self.physics.direction = dir
     self.physics.speed = speed
     self.collidable = false
+    self.collider = CircleCollider(self, self.width / 2, self.height / 2, 13)
 end
 
 function RingAfterimage:update()

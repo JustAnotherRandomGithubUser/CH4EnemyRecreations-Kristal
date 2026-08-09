@@ -176,9 +176,9 @@ function BalthizardActorSprite:update()
     self.animsiner = self.animsiner + 1 * DTMULT
 	
     if self.shaking then
-        self.headamplitude = MathUtils.lerp(self.headamplitude, 0, 0.25)
+        self.headamplitude = MathUtils.lerp(self.headamplitude, 0, 0.25 * DTMULT)
     else
-        self.headamplitude = MathUtils.lerp(self.headamplitude, 5/2, 0.25)
+        self.headamplitude = MathUtils.lerp(self.headamplitude, 5/2, 0.25 * DTMULT)
     end
 	
     self.eyedelay = self.eyedelay - 1 * DTMULT
