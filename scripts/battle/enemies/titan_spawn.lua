@@ -318,7 +318,7 @@ end
 function TitanSpawn:getEncounterText()
     if Game:getTension() >= 64 then
 		return "* The atmosphere feels tense...\n* (You can use [color:yellow]BANISH[color:reset]!)"
-    elseif Game:getTension() < 64 and MathUtils.randomInt(100) < 4 then
+    elseif MathUtils.randomInt(100) < 4 then
 		return "* Smells like adrenaline."
 	else
 		return super.getEncounterText(self)
