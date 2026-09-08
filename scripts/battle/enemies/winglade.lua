@@ -49,6 +49,7 @@ function Winglade:init()
     self:registerAct("Whirl", "SPARE\nall!", { "susie", "ralsei" }, 64)
 
     self.transition_ended = false
+    self.floatsiner = 0
 end
 
 function Winglade:onAdd(parent)
@@ -58,6 +59,13 @@ end
 
 function Winglade:update()
     super.update(self)
+
+    local dont = { "TRANSITION", "INTRO", "DEFENDING" }
+    if not TableUtils.contains(dont, Game.battle.state) and self.done_state == nil then
+        self.floatsiner = self.floatsiner + DTMULT
+    end
+    local sprite = self:getActiveSprite()
+    sprite.y = sprite.init_y + (math.sin(self.floatsiner / 12) * 4) / 2
 
     if not self.transition_ended and Game.battle.state ~= "TRANSITION" and Game.battle.state ~= "INTRO" then
         self.transition_ended = true
@@ -129,17 +137,6 @@ function Winglade:onShortAct(battler, name)
     end
 end
 
-function Winglade:onHurt(...)
-    self:setAnimation("hurt")
-    super.onHurt(self, ...)
-end
-
-function Winglade:onHurtEnd()
-    if self:canSpare() then self:onSpareable()
-    else self:setAnimation("idle") end
-    super.onHurtEnd(self)
-end
-
 function Winglade:onSpared()
     self:setAnimation("hurt")
 end
@@ -176,7 +173,7 @@ function Winglade:getEncounterText()
         return self.spareable_text
     end
 
-    if MathUtils.randomInt(100) < 3 then
+    if MathUtils.randomInt(101) < 3 then
         return "* Smells like old down pillow."
     end
 

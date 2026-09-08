@@ -45,9 +45,6 @@ function WingladeActorSprite:init(actor)
     self.eye_pupil.debug_select = false
     self:addChild(self.eye_pupil)
 
-    self.timer = 0
-    self.speed = 0.05
-
     self.eye_target_x = 0
     self.eye_target_y = 0
     self.eye_target_set = false
@@ -93,30 +90,25 @@ function WingladeActorSprite:setAnimation(anim, callback, ignore_actor_callback)
         self.eye_pupil.visible = false
         self.eye_white:setSprite(self:getTexturePath("eye_pupil_spare"))
     end
-    super.setAnimation(self, anim, callback, ignore_actor_callback)
+    return super.setAnimation(self, anim, callback, ignore_actor_callback)
 end
 
 function WingladeActorSprite:update()
     super.update(self)
 
-    self.timer = self.timer + DTMULT
-
-    local speed = self.speed
-    self.y = self.y + (math.sin(self.timer * speed) - math.sin((self.timer - 1) * speed)) * 3 * DTMULT
-
     local anim = self.anim or "idle"
 
     if anim == "idle" or anim == "spared" then
         self.eye_timer = self.eye_timer + DTMULT
-        if self.eye_timer > 30 and not self.eye_target_set then
-            local eye_angle = 160 + MathUtils.randomInt(0, 40)
+        if self.eye_timer >= 30 and not self.eye_target_set then
+            local eye_angle = 160 + MathUtils.randomInt(41)
             self.eye_target_x = math.cos(math.rad(eye_angle)) * 3
             self.eye_target_y = math.sin(math.rad(eye_angle)) * 3
             self.eye_target_set = true
         end
-        if self.eye_timer > 90 then
+        if self.eye_timer >= 90 then
             self.eye_target_set = false
-            self.eye_timer = MathUtils.randomInt(0, 8) - MathUtils.randomInt(0, 8)
+            self.eye_timer = MathUtils.randomInt(9) - MathUtils.randomInt(9)
             self.eye_target_x = 0
             self.eye_target_y = 0
         end
