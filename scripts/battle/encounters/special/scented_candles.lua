@@ -1,18 +1,18 @@
-local Organikk, super = Class(Encounter)
+local ScentedCandles, super = Class(Encounter)
 
-function Organikk:init()
+function ScentedCandles:init()
     super.init(self)
 
-    self.text = "* Organikk accosts you!"
+    self.text = "* Smells like scented candles."
 
     self.music = "ch4_battle"
     self.background = true
 
-    self.organ_1 = self:addEnemy("organikk", 524, 193)
-    self.organ_2 = self:addEnemy("organikk", 524, 314)
+    self.guei = self:addEnemy("guei", 550, 182)
+    self.balthizard = self:addEnemy("balthizard", 526, 284)
 end
 
-function Organikk:getPartyPosition(index)
+function ScentedCandles:getPartyPosition(index)
     local krloc = {94, 50}
     local suloc = {80, 122}
     local raloc = {72, 200}
@@ -35,4 +35,4 @@ function Organikk:getPartyPosition(index)
     end
 end
 
-return Organikk
+return ScentedCandles

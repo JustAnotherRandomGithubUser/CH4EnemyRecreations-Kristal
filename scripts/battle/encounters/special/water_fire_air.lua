@@ -1,18 +1,19 @@
-local Organikk, super = Class(Encounter)
+local WaterFireAir, super = Class(Encounter)
 
-function Organikk:init()
+function WaterFireAir:init()
     super.init(self)
 
-    self.text = "* Organikk accosts you!"
+    self.text = "* Water, fire, air."
 
     self.music = "ch4_battle"
     self.background = true
 
-    self.organ_1 = self:addEnemy("organikk", 524, 193)
-    self.organ_2 = self:addEnemy("organikk", 524, 314)
+    self.balthizard = self:addEnemy("balthizard", 543, 134)
+    self.mizzle = self:addEnemy("mizzle", 551, 220)
+    self.guei = self:addEnemy("guei", 541, 324)
 end
 
-function Organikk:getPartyPosition(index)
+function WaterFireAir:getPartyPosition(index)
     local krloc = {94, 50}
     local suloc = {80, 122}
     local raloc = {72, 200}
@@ -35,4 +36,4 @@ function Organikk:getPartyPosition(index)
     end
 end
 
-return Organikk
+return WaterFireAir

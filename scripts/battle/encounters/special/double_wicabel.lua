@@ -1,18 +1,18 @@
-local Organikk, super = Class(Encounter)
+local Wicabel, super = Class(Encounter)
 
-function Organikk:init()
+function Wicabel:init()
     super.init(self)
 
-    self.text = "* Organikk accosts you!"
+    self.text = "* Wicabel clangs in your way!"
 
     self.music = "ch4_battle"
     self.background = true
 
-    self.organ_1 = self:addEnemy("organikk", 524, 193)
-    self.organ_2 = self:addEnemy("organikk", 524, 314)
+    self.wicabel = self:addEnemy("wicabel", 475 + 41, 56 + 112)
+    self.wicabel = self:addEnemy("wicabel", 488 + 41, 188 + 112)
 end
 
-function Organikk:getPartyPosition(index)
+function Wicabel:getPartyPosition(index)
     local krloc = {94, 50}
     local suloc = {80, 122}
     local raloc = {72, 200}
@@ -35,4 +35,4 @@ function Organikk:getPartyPosition(index)
     end
 end
 
-return Organikk
+return Wicabel

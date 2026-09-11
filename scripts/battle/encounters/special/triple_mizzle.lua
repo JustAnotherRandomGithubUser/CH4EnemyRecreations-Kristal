@@ -1,18 +1,19 @@
-local Organikk, super = Class(Encounter)
+local TripleMizzle, super = Class(Encounter)
 
-function Organikk:init()
+function TripleMizzle:init()
     super.init(self)
 
-    self.text = "* Organikk accosts you!"
+    self.text = "* Placeholder."
 
     self.music = "ch4_battle"
     self.background = true
 
-    self.organ_1 = self:addEnemy("organikk", 524, 193)
-    self.organ_2 = self:addEnemy("organikk", 524, 314)
+    self.mizzle_1 = self:addEnemy("mizzle", 548, 130)
+    self.mizzle_2 = self:addEnemy("mizzle", 526, 210)
+    self.mizzle_3 = self:addEnemy("mizzle", 550, 300)
 end
 
-function Organikk:getPartyPosition(index)
+function TripleMizzle:getPartyPosition(index)
     local krloc = {94, 50}
     local suloc = {80, 122}
     local raloc = {72, 200}
@@ -35,4 +36,4 @@ function Organikk:getPartyPosition(index)
     end
 end
 
-return Organikk
+return TripleMizzle
